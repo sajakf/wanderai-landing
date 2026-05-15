@@ -22,13 +22,21 @@ export default function Home() {
   return (
     <main className="relative min-h-screen overflow-hidden flex flex-col">
 
-      {/* ── Background ── */}
-      <div className="gradient-bg absolute inset-0" />
-      <div className="grain absolute inset-0 opacity-[0.18]" />
+      {/* ── Video Background ── */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%23d4e9eb'/%3E%3C/svg%3E"
+      >
+        <source src="https://assets.mixkit.co/videos/5008/5008-720.mp4" type="video/mp4" />
+      </video>
+      <div className="video-overlay absolute inset-0" />
+      <div className="grain absolute inset-0 opacity-[0.12]" />
       <div className="orb orb-gold" />
-      <div className="orb orb-blue" />
       <div className="orb orb-rose" />
-      <div className="orb orb-mint" />
 
       {/* ── Top nav ── */}
       <nav className="relative z-10 flex items-center justify-between px-8 md:px-14 pt-9 fade-up delay-1">
@@ -37,13 +45,13 @@ export default function Home() {
             <circle cx="11" cy="11" r="10" stroke="currentColor" strokeWidth="1.4" />
             <path d="M1 11h20M11 1c-3 3-4.5 6-4.5 10s1.5 7 4.5 10M11 1c3 3 4.5 6 4.5 10s-1.5 7-4.5 10" stroke="currentColor" strokeWidth="1.4" />
           </svg>
-          <span className="text-sm tracking-[0.22em] uppercase text-stone-600 font-medium">
+          <span className="text-sm tracking-[0.22em] uppercase text-stone-700 font-semibold">
             WanderAI
           </span>
         </div>
         <div className="hidden sm:flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs tracking-widest text-stone-400 uppercase font-light">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-xs tracking-widest text-stone-600 uppercase font-light">
             Coming soon
           </span>
         </div>
@@ -54,27 +62,27 @@ export default function Home() {
 
         {/* Eyebrow */}
         <div className="fade-up delay-2 flex items-center gap-3 mb-10">
-          <div className="w-10 h-px bg-stone-300" />
-          <span className="text-xs tracking-[0.38em] uppercase text-stone-400 font-light">
+          <div className="w-10 h-px bg-stone-400/60" />
+          <span className="text-xs tracking-[0.38em] uppercase text-stone-500 font-light">
             A new way to wander
           </span>
-          <div className="w-10 h-px bg-stone-300" />
+          <div className="w-10 h-px bg-stone-400/60" />
         </div>
 
         {/* Hero headline */}
         <h1 className="hero-text font-serif text-stone-900 mb-8 fade-up delay-3">
-          <span className="block font-light text-stone-700">Pack light.</span>
-          <span className="block font-black italic" style={{ color: '#b5872a' }}>
+          <span className="block font-light text-stone-800">Pack light.</span>
+          <span className="block font-black italic" style={{ color: '#9a6f1e' }}>
             Dream heavy.
           </span>
         </h1>
 
         {/* Sub-headline */}
         <div className="fade-up delay-4 mb-14 space-y-2">
-          <p className="text-lg md:text-xl text-stone-500 font-light leading-relaxed tracking-wide">
+          <p className="text-lg md:text-xl text-stone-600 font-light leading-relaxed tracking-wide">
             AI-powered travel is boarding soon —
           </p>
-          <p className="text-base md:text-lg text-stone-400 font-light">
+          <p className="text-base md:text-lg text-stone-500 font-light">
             and you&apos;ll definitely want a window seat.
           </p>
         </div>
@@ -90,8 +98,8 @@ export default function Home() {
               />
             ))}
           </div>
-          <p className="text-sm text-stone-400 font-light">
-            <span className="text-stone-700 font-medium">2,847</span> travellers already on board
+          <p className="text-sm text-stone-500 font-light">
+            <span className="text-stone-800 font-medium">2,847</span> travellers already on board
           </p>
         </div>
 

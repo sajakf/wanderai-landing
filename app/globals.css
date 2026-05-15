@@ -14,25 +14,17 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── Animated Background ─── */
-.gradient-bg {
+/* ─── Video overlay — frosted light wash ─── */
+.video-overlay {
   background: linear-gradient(
-    -45deg,
-    #fafaf8,
-    #f0ebe3,
-    #e8f0f4,
-    #f5ede8,
-    #eef4f0,
-    #fafaf8
+    160deg,
+    rgba(255, 255, 255, 0.62) 0%,
+    rgba(248, 244, 240, 0.52) 40%,
+    rgba(232, 244, 248, 0.48) 70%,
+    rgba(255, 255, 255, 0.58) 100%
   );
-  background-size: 500% 500%;
-  animation: gradientDrift 20s ease infinite;
-}
-
-@keyframes gradientDrift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 
 /* ─── Floating Orbs ─── */
