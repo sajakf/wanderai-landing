@@ -1,6 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
+
+const VIDEOS = [
+  'https://assets.mixkit.co/videos/5008/5008-720.mp4',   // turquoise tropical bay
+  'https://assets.mixkit.co/videos/5012/5012-720.mp4',   // rocky cape from above
+  'https://assets.mixkit.co/videos/4999/4999-720.mp4',   // golden sunset bay
+  'https://assets.mixkit.co/videos/44370/44370-720.mp4', // flying over sea at sunset
+  'https://assets.mixkit.co/videos/36615/36615-720.mp4', // aerial coastal panorama
+]
 
 const AVATAR_COLORS = [
   'hsl(35, 55%, 72%)',
@@ -9,6 +17,34 @@ const AVATAR_COLORS = [
   'hsl(150, 35%, 65%)',
   'hsl(270, 30%, 72%)',
 ]
+
+function VideoCycler() {
+  const [index, setIndex] = useState(0)
+  const [fadingOut, setFadingOut] = useState(false)
+
+  const handleEnded = useCallback(() => {
+    setFadingOut(true)
+    setTimeout(() => {
+      setIndex(i => (i + 1) % VIDEOS.length)
+      setFadingOut(false)
+    }, 800)
+  }, [])
+
+  return (
+    <video
+      key={index}
+      autoPlay
+      muted
+      playsInline
+      onEnded={handleEnded}
+      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[800ms] ease-in-out ${
+        fadingOut ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
+      <source src={VIDEOS[index]} type="video/mp4" />
+    </video>
+  )
+}
 
 export default function Home() {
   const [email, setEmail] = useState('')
@@ -23,16 +59,7 @@ export default function Home() {
     <main className="relative min-h-screen overflow-hidden flex flex-col">
 
       {/* ── Video Background ── */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%23d4e9eb'/%3E%3C/svg%3E"
-      >
-        <source src="https://assets.mixkit.co/videos/5008/5008-720.mp4" type="video/mp4" />
-      </video>
+      <VideoCycler />
       <div className="video-overlay absolute inset-0" />
       <div className="grain absolute inset-0 opacity-[0.12]" />
       <div className="orb orb-gold" />
