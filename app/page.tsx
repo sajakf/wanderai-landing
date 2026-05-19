@@ -59,36 +59,38 @@ const CHAT = [
 // ─── W mark logo (calligraphic W + plane, traced from brand handoff) ─────────
 function WMark({ className = 'w-8 h-6', color = 'currentColor' }: { className?: string; color?: string }) {
   return (
-    <svg viewBox="0 0 250 158" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <svg viewBox="0 0 260 148" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
       {/*
-        Single continuous stroke:
-        1. Left decorative curl — sweeps UP-LEFT then back down
-        2. Left valley at bottom-left
-        3. Rising to center area
-        4. Small teardrop loop at center (cursive W characteristic)
+        Continuous stroke — traced from the brand logo PNG:
+        1. Tail: starts bottom-left, hooks down then sweeps up-left
+        2. Left curl: large arc swinging left then back right
+        3. Left arm: curves down to left valley
+        4. Center rise to teardrop loop (knot at W midpoint)
         5. Down to right valley
-        6. Dramatic sweep UP-RIGHT to plane tip
+        6. Long dramatic arc up-right to plane
       */}
       <path
-        d="M 60 92
-           C 36 76, 10 52, 22 32
-           C 32 14, 56 24, 54 52
-           C 52 72, 58 102, 72 120
-           C 84 134, 102 132, 112 112
-           C 122 92, 124 66, 124 56
-           C 124 48, 130 44, 134 52
-           C 140 64, 134 82, 125 88
-           C 116 94, 110 86, 113 76
-           C 116 66, 124 62, 130 70
-           C 138 82, 150 108, 158 118
-           C 170 132, 186 128, 196 112
-           C 210 92, 222 60, 232 26"
-        stroke={color} strokeWidth="6.5" strokeLinecap="round" strokeLinejoin="round"
+        d="M 30 112
+           C 22 98, 14 80, 20 60
+           C 26 40, 46 26, 68 36
+           C 84 44, 90 60, 84 80
+           C 78 100, 74 116, 76 128
+           C 80 140, 94 142, 106 130
+           C 118 118, 126 98, 128 80
+           C 130 62, 130 50, 134 48
+           C 138 46, 142 50, 142 60
+           C 144 72, 138 86, 130 90
+           C 122 94, 116 86, 118 76
+           C 120 66, 128 62, 136 70
+           C 146 82, 158 108, 168 122
+           C 180 138, 198 136, 210 120
+           C 224 102, 234 70, 238 28"
+        stroke={color} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"
       />
-      {/* Airplane silhouette — body + wings, facing upper-right ~42° */}
-      <g transform="translate(233,23) rotate(-42)">
-        <path d="M0 0 L-13 -4.5 L-9 0 L-13 4.5 Z" fill={color}/>
-        <path d="M-9 -1 L-17 -8 L-15.5 -1 L-17 1 L-15.5 1 L-17 8 L-9 1 Z" fill={color} opacity="0.8"/>
+      {/* Plane — body + wings facing upper-right at ~42° */}
+      <g transform="translate(239,25) rotate(-42)">
+        <path d="M0 0 L-12 -4 L-8.5 0 L-12 4 Z" fill={color}/>
+        <path d="M-8.5 -1 L-16 -7.5 L-14.5 -1 L-16 1 L-14.5 1 L-16 7.5 L-8.5 1 Z" fill={color} opacity="0.85"/>
       </g>
     </svg>
   )
