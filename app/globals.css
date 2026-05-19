@@ -13,14 +13,11 @@ html, body {
 /* ─── Video overlay ─── */
 .video-overlay {
   background: linear-gradient(
-    160deg,
-    rgba(255,255,255,0.55) 0%,
-    rgba(248,244,240,0.44) 40%,
-    rgba(232,244,248,0.40) 70%,
-    rgba(255,255,255,0.50) 100%
+    to bottom,
+    rgba(0,0,0,0.08) 0%,
+    rgba(0,0,0,0.18) 50%,
+    rgba(0,0,0,0.45) 100%
   );
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
 }
 
 /* ─── Orbs ─── */
