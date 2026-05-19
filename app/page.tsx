@@ -286,29 +286,25 @@ export default function Home() {
         {/* Nav */}
         <nav className="relative z-10 flex items-center justify-between px-5 sm:px-10 pt-6 fade-up delay-1">
           <div className="flex items-center gap-2">
-            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" className="text-stone-700">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" className="text-white/90">
               <circle cx="11" cy="11" r="10" stroke="currentColor" strokeWidth="1.4"/>
               <path d="M1 11h20M11 1c-3 3-4.5 6-4.5 10s1.5 7 4.5 10M11 1c3 3 4.5 6 4.5 10s-1.5 7-4.5 10" stroke="currentColor" strokeWidth="1.4"/>
             </svg>
-            <span className="text-xs tracking-[0.2em] uppercase text-stone-700 font-semibold">WanderAI</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] tracking-widest text-stone-500 uppercase font-light hidden sm:block">Coming soon</span>
+            <span className="text-xs tracking-[0.2em] uppercase font-semibold" style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}>WanderAI</span>
           </div>
         </nav>
 
         {/* Hero body */}
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-5 text-center">
           <div className="fade-up delay-2 flex items-center gap-2.5 mb-7">
-            <div className="w-8 h-px bg-stone-400/50" />
-            <span className="text-[10px] tracking-[0.35em] uppercase text-stone-500 font-light">AI travel agent · WhatsApp</span>
-            <div className="w-8 h-px bg-stone-400/50" />
+            <div className="w-8 h-px bg-white/40" />
+            <span className="text-[10px] tracking-[0.35em] uppercase font-light" style={{ color: 'rgba(255,255,255,0.82)', textShadow: '0 1px 4px rgba(0,0,0,0.5)', letterSpacing: '0.3em' }}>AI travel agent · WhatsApp</span>
+            <div className="w-8 h-px bg-white/40" />
           </div>
 
-          <h1 className="hero-text font-serif text-stone-900 mb-5 fade-up delay-3">
-            <span className="block font-light text-stone-800">Pack light.</span>
-            <span className="block font-black italic" style={{ color: '#9a6f1e' }}>Dream heavy.</span>
+          <h1 className="hero-text font-serif mb-5 fade-up delay-3">
+            <span className="block font-light" style={{ color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.35)' }}>Pack light.</span>
+            <span className="block font-black italic" style={{ color: '#c9920a', textShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>Dream heavy.</span>
           </h1>
 
           <p className="fade-up delay-4 text-sm sm:text-base font-medium max-w-sm mb-8 leading-relaxed"
@@ -329,11 +325,6 @@ export default function Home() {
 
           {/* Social proof — Instagram style */}
           <div className="fade-up delay-6 flex items-center gap-3">
-            <div className="flex -space-x-2">
-              {AVATAR_COLORS.map((c, i) => (
-                <div key={i} className="w-7 h-7 rounded-full border-2 border-white/80 shadow-sm" style={{ backgroundColor: c, zIndex: 5 - i }} />
-              ))}
-            </div>
             <div className="flex items-center gap-1.5">
               <a
                 href="https://www.instagram.com/wanderai.travels"

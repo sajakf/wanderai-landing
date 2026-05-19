@@ -1,11 +1,15 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Outfit, Playfair_Display } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({
+// NORWAY by Minimalistartstudio is not on Google Fonts.
+// Outfit is the closest available geometric sans-serif match.
+// To use the real NORWAY font: add the .woff2 files to /public/fonts/
+// and replace this with a @font-face in globals.css.
+const outfit = Outfit({
   subsets: ['latin'],
-  variable: '--font-inter',
-  weight: ['300', '400', '500', '600'],
+  variable: '--font-norway',
+  weight: ['300', '400', '500', '600', '700'],
 })
 
 const playfair = Playfair_Display({
@@ -39,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${outfit.variable} ${playfair.variable}`}>
       <body className="font-sans antialiased">{children}</body>
     </html>
   )
