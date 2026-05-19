@@ -554,21 +554,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════
-          FLOATING WHATSAPP BUTTON
-      ══════════════════════════════════════════════ */}
-      <a
-        href={WA_LINK}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-xl transition-transform duration-200 hover:scale-110 active:scale-95"
-        style={{ backgroundColor: '#25D366', boxShadow: '0 4px 24px rgba(37,211,102,0.45)' }}
-        aria-label="Chat on WhatsApp"
-      >
-        {/* Pulse ring */}
-        <span className="absolute inset-0 rounded-full animate-ping-slow opacity-30" style={{ backgroundColor: '#25D366' }} />
-        <WaIcon className="w-7 h-7 text-white relative z-10" />
-      </a>
 
     </div>
   )
