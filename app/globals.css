@@ -71,6 +71,21 @@ html, body {
   background-size: 200px;
 }
 
+/* ─── Ken Burns motion variants (6 directions) ─── */
+@keyframes kb0 { from { transform: scale(1.0) translate(0%,    0%);    } to { transform: scale(1.1) translate(-2%,  -1.5%); } }
+@keyframes kb1 { from { transform: scale(1.0) translate(0%,    0%);    } to { transform: scale(1.1) translate( 2%,  -1.5%); } }
+@keyframes kb2 { from { transform: scale(1.08) translate(-1.5%,-1%);   } to { transform: scale(1.0) translate( 1%,   1%);   } }
+@keyframes kb3 { from { transform: scale(1.08) translate( 1.5%,-1%);   } to { transform: scale(1.0) translate(-1%,   1%);   } }
+@keyframes kb4 { from { transform: scale(1.05) translate( 0%,  1.5%);  } to { transform: scale(1.1) translate( 0%,  -1%);   } }
+@keyframes kb5 { from { transform: scale(1.05) translate(-2%,   0%);   } to { transform: scale(1.1) translate( 2%,   0%);   } }
+
+.kb-0 { animation: kb0 8s ease-in-out forwards; }
+.kb-1 { animation: kb1 8s ease-in-out forwards; }
+.kb-2 { animation: kb2 8s ease-in-out forwards; }
+.kb-3 { animation: kb3 8s ease-in-out forwards; }
+.kb-4 { animation: kb4 8s ease-in-out forwards; }
+.kb-5 { animation: kb5 8s ease-in-out forwards; }
+
 /* ─── Fade-up (hero only) ─── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(22px); }

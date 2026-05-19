@@ -96,71 +96,94 @@ function useReveal(threshold = 0.12) {
   return { ref, visible }
 }
 
-// ─── Photo cycler (glitch-free: base always opaque, top fades IN only) ───────
+// ─── Photo cycler — two-slot alternating crossfade + Ken Burns, zero glitch ───
+// How it works:
+//   Slot A and Slot B alternate being "active" (opacity 1) and "standby" (opacity 0).
+//   When it's time to advance, we first update the STANDBY slot's image (invisible → no flash),
+//   wait one rAF for React to commit the new src, then flip which slot is active.
+//   Both slots always have a CSS opacity transition, so the crossfade is butter-smooth.
+//   Each image gets a random Ken Burns animation restarted via React key.
+const KB_COUNT = 6
+
 function PhotoCycler() {
-  const [baseIdx, setBaseIdx]       = useState(0)
-  const [topIdx,  setTopIdx]        = useState(1)
-  const [topOpacity, setTopOpacity] = useState(0)
-  const isFading = useRef(false)
+  const [slotA, setSlotA] = useState({ photoIdx: 0, kbKey: 0, kbClass: 'kb-0' })
+  const [slotB, setSlotB] = useState({ photoIdx: 1, kbKey: 1, kbClass: 'kb-1' })
+  const [aActive, setAActive] = useState(true)   // which slot is currently visible
+  const nextPhoto = useRef(2)
+  const aActiveRef = useRef(true)
+  const busy = useRef(false)
+
+  // Preload all images up front so transitions never stall on a network fetch
+  useEffect(() => {
+    PHOTOS.forEach(p => { const img = new Image(); img.src = p.url })
+  }, [])
 
   useEffect(() => {
-    const tick = setInterval(() => {
-      if (isFading.current) return
-      isFading.current = true
-      setTopOpacity(1)                       // fade top IN over TRANSITION_MS
-      setTimeout(() => {
-        setBaseIdx(prev => {
-          const next = (prev + 1) % PHOTOS.length
-          setTopIdx((next + 1) % PHOTOS.length)
-          setTopOpacity(0)                   // instant reset — no flash
-          return next
-        })
-        isFading.current = false
-      }, TRANSITION_MS)
+    const timer = setInterval(() => {
+      if (busy.current) return
+      busy.current = true
+
+      const idx      = nextPhoto.current % PHOTOS.length
+      const kbClass  = `kb-${Math.floor(Math.random() * KB_COUNT)}`
+      nextPhoto.current++
+
+      if (aActiveRef.current) {
+        // A is showing → silently update B (it's invisible), then fade B in
+        setSlotB({ photoIdx: idx, kbKey: Date.now(), kbClass })
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          setAActive(false)
+          aActiveRef.current = false
+          setTimeout(() => { busy.current = false }, TRANSITION_MS + 100)
+        }))
+      } else {
+        // B is showing → silently update A (it's invisible), then fade A in
+        setSlotA({ photoIdx: idx, kbKey: Date.now(), kbClass })
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          setAActive(true)
+          aActiveRef.current = true
+          setTimeout(() => { busy.current = false }, TRANSITION_MS + 100)
+        }))
+      }
     }, INTERVAL_MS)
-    return () => clearInterval(tick)
+
+    return () => clearInterval(timer)
   }, [])
+
+  const FADE = `opacity ${TRANSITION_MS}ms cubic-bezier(0.4,0,0.2,1)`
+  const activeLocation = aActive ? PHOTOS[slotA.photoIdx].location : PHOTOS[slotB.photoIdx].location
 
   return (
     <>
-      {/* Base — always opacity 1, never fades out */}
-      <div className="absolute inset-0" style={{ zIndex: 0 }}>
+      {/* Slot A */}
+      <div className="absolute inset-0 overflow-hidden"
+        style={{ zIndex: aActive ? 2 : 1, opacity: aActive ? 1 : 0, transition: FADE }}>
         <img
-          src={PHOTOS[baseIdx].url}
-          alt={PHOTOS[baseIdx].location}
-          className="absolute inset-0 w-full h-full object-cover scale-[1.04]"
-          style={{ transition: `transform ${INTERVAL_MS + TRANSITION_MS}ms linear` }}
+          key={slotA.kbKey}
+          src={PHOTOS[slotA.photoIdx].url}
+          alt={PHOTOS[slotA.photoIdx].location}
+          className={`absolute inset-0 w-full h-full object-cover will-change-transform ${slotA.kbClass}`}
         />
       </div>
 
-      {/* Top — fades in on top, instant-resets when done */}
-      <div
-        className="absolute inset-0"
-        style={{
-          zIndex:     1,
-          opacity:    topOpacity,
-          transition: topOpacity === 1
-            ? `opacity ${TRANSITION_MS}ms cubic-bezier(0.4,0,0.2,1)`
-            : 'none',
-        }}
-      >
+      {/* Slot B */}
+      <div className="absolute inset-0 overflow-hidden"
+        style={{ zIndex: aActive ? 1 : 2, opacity: aActive ? 0 : 1, transition: FADE }}>
         <img
-          src={PHOTOS[topIdx].url}
-          alt={PHOTOS[topIdx].location}
-          className="absolute inset-0 w-full h-full object-cover scale-[1.04]"
+          key={slotB.kbKey}
+          src={PHOTOS[slotB.photoIdx].url}
+          alt={PHOTOS[slotB.photoIdx].location}
+          className={`absolute inset-0 w-full h-full object-cover will-change-transform ${slotB.kbClass}`}
         />
       </div>
 
-      {/* Location badge — bottom left */}
+      {/* Location badge */}
       <div className="absolute bottom-5 left-5 z-10 flex items-center gap-1.5"
-        style={{ background: 'rgba(0,0,0,0.28)', backdropFilter: 'blur(8px)', borderRadius: 999, padding: '5px 12px', border: '1px solid rgba(255,255,255,0.15)' }}>
+        style={{ background: 'rgba(0,0,0,0.32)', backdropFilter: 'blur(10px)', borderRadius: 999, padding: '5px 14px', border: '1px solid rgba(255,255,255,0.15)' }}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3 text-amber-300">
           <path d="M12 21c-4.418-4.418-7-8.582-7-11a7 7 0 1114 0c0 2.418-2.582 6.582-7 11z"/>
           <circle cx="12" cy="10" r="2"/>
         </svg>
-        <span className="text-[10px] text-white/80 font-medium tracking-wide">
-          {topOpacity > 0 ? PHOTOS[topIdx].location : PHOTOS[baseIdx].location}
-        </span>
+        <span className="text-[10px] text-white/80 font-medium tracking-wide">{activeLocation}</span>
       </div>
     </>
   )
