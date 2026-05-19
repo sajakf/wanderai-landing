@@ -1,22 +1,18 @@
 import type { Metadata } from 'next'
-import { Outfit, Playfair_Display } from 'next/font/google'
+import { Inter, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 
-// NORWAY by Minimalistartstudio is not on Google Fonts.
-// Outfit is the closest available geometric sans-serif match.
-// To use the real NORWAY font: add the .woff2 files to /public/fonts/
-// and replace this with a @font-face in globals.css.
-const outfit = Outfit({
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-norway',
   weight: ['300', '400', '500', '600', '700'],
 })
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   variable: '--font-playfair',
   style: ['normal', 'italic'],
-  weight: ['400', '700', '900'],
+  weight: ['300', '400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -43,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${outfit.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
       <body className="font-sans antialiased">{children}</body>
     </html>
   )

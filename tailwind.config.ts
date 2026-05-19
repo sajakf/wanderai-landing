@@ -13,7 +13,12 @@ const config: Config = {
         serif: ['var(--font-playfair)', 'Georgia', 'serif'],
       },
       colors: {
-        gold: '#C49540',
+        gold:       '#C8A36B',
+        sand:       '#EBDFD1',
+        ivory:      '#F7F4EF',
+        terracotta: '#C56A4E',
+        teal:       '#517D86',
+        slate:      '#2E3538',
       },
     },
   },

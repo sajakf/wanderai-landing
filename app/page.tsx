@@ -3,12 +3,22 @@
 import { useState, useEffect, useRef } from 'react'
 import { WA_LINK } from '@/lib/messaging'
 
+// ─── Brand colours ────────────────────────────────────────────────────────────
+const BRAND = {
+  gold:       '#C8A36B',
+  sand:       '#EBDFD1',
+  ivory:      '#F7F4EF',
+  terracotta: '#C56A4E',
+  teal:       '#517D86',
+  slate:      '#2E3538',
+}
+
 // ─── Curated travel photos (verified Unsplash IDs) ───────────────────────────
 const BASE = 'https://images.unsplash.com'
 const P    = '?auto=format&fit=crop&w=1920&q=85'
 
 const PHOTOS = [
-  { url: `${BASE}/photo-1551410224-699683e15636${P}`, location: 'Isle of Skye, Scotland'      },
+  { url: `${BASE}/photo-1499856871958-5b9627545d1a${P}`, location: 'Isle of Skye, Scotland'     },
   { url: `${BASE}/photo-1520769945061-0a448c463865${P}`, location: 'Lofoten Islands, Norway'  },
   { url: `${BASE}/photo-1490806843957-31f4c9a91c65${P}`, location: 'Mount Fuji, Japan'        },
   { url: `${BASE}/photo-1533105079780-92b9be482077${P}`, location: 'Santorini, Greece'        },
@@ -46,42 +56,54 @@ const CHAT = [
   { from: 'user', text: "This is perfect. Book the flights please! 🙌", time: '10:06' },
 ]
 
+// ─── Feature icon components ──────────────────────────────────────────────────
+function IconChat() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-9 h-9">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      <line x1="9" y1="10" x2="15" y2="10"/>
+      <line x1="9" y1="13" x2="13" y2="13"/>
+    </svg>
+  )
+}
+function IconCompass() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-9 h-9">
+      <circle cx="12" cy="12" r="10"/>
+      <polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/>
+    </svg>
+  )
+}
+function IconClock() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-9 h-9">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+  )
+}
+function IconWallet() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-9 h-9">
+      <rect x="2" y="5" width="20" height="14" rx="2"/>
+      <path d="M2 10h20"/>
+      <circle cx="16" cy="15" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  )
+}
+
 // ─── Feature cards ────────────────────────────────────────────────────────────
 const FEATURES = [
-  {
-    emoji: '💬',
-    gradient: 'from-green-50 to-emerald-50',
-    accent: '#25D366',
-    title: 'No app needed',
-    desc: 'Chat on WhatsApp — the app you already use every day.',
-  },
-  {
-    emoji: '✨',
-    gradient: 'from-amber-50 to-yellow-50',
-    accent: '#9a6f1e',
-    title: 'AI trip planning',
-    desc: 'Full personalised itinerary in under 3 minutes.',
-  },
-  {
-    emoji: '🌙',
-    gradient: 'from-indigo-50 to-blue-50',
-    accent: '#4f46e5',
-    title: '24 / 7 available',
-    desc: 'Ask at midnight, change plans mid-flight. Always on.',
-  },
-  {
-    emoji: '💰',
-    gradient: 'from-rose-50 to-orange-50',
-    accent: '#e05a2b',
-    title: 'Budget-smart',
-    desc: 'Set your budget once — we stay within it, always.',
-  },
+  { Icon: IconChat,    accent: BRAND.teal,       title: 'No app needed',    desc: 'Chat on WhatsApp — the app you already use every day.' },
+  { Icon: IconCompass, accent: BRAND.gold,       title: 'AI trip planning', desc: 'Full personalised itinerary in under 3 minutes.' },
+  { Icon: IconClock,   accent: BRAND.terracotta, title: '24 / 7 available', desc: 'Ask at midnight, change plans mid-flight. Always on.' },
+  { Icon: IconWallet,  accent: BRAND.slate,      title: 'Budget-smart',     desc: 'Set your budget once — we stay within it, always.' },
 ]
 
 const STEPS = [
-  { n: '01', title: 'Send a message', desc: 'Tell us your destination, dates, and budget on WhatsApp. No forms, no sign-up.' },
-  { n: '02', title: 'Get recommendations', desc: 'WanderAI replies with curated options tailored to you — not generic lists.' },
-  { n: '03', title: 'Receive your plan', desc: 'A full day-by-day itinerary with costs, right in your chat. Share with friends in one tap.' },
+  { n: '01', title: 'Send a message',       desc: 'Tell us your destination, dates, and budget on WhatsApp. No forms, no sign-up.' },
+  { n: '02', title: 'Get recommendations',  desc: 'WanderAI replies with curated options tailored to you — not generic lists.' },
+  { n: '03', title: 'Receive your plan',    desc: 'A full day-by-day itinerary with costs, right in your chat. Share with friends in one tap.' },
 ]
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
@@ -97,23 +119,16 @@ function useReveal(threshold = 0.12) {
 }
 
 // ─── Photo cycler — two-slot alternating crossfade + Ken Burns, zero glitch ───
-// How it works:
-//   Slot A and Slot B alternate being "active" (opacity 1) and "standby" (opacity 0).
-//   When it's time to advance, we first update the STANDBY slot's image (invisible → no flash),
-//   wait one rAF for React to commit the new src, then flip which slot is active.
-//   Both slots always have a CSS opacity transition, so the crossfade is butter-smooth.
-//   Each image gets a random Ken Burns animation restarted via React key.
 const KB_COUNT = 6
 
 function PhotoCycler() {
   const [slotA, setSlotA] = useState({ photoIdx: 0, kbKey: 0, kbClass: 'kb-0' })
   const [slotB, setSlotB] = useState({ photoIdx: 1, kbKey: 1, kbClass: 'kb-1' })
-  const [aActive, setAActive] = useState(true)   // which slot is currently visible
+  const [aActive, setAActive] = useState(true)
   const nextPhoto = useRef(2)
   const aActiveRef = useRef(true)
   const busy = useRef(false)
 
-  // Preload all images up front so transitions never stall on a network fetch
   useEffect(() => {
     PHOTOS.forEach(p => { const img = new Image(); img.src = p.url })
   }, [])
@@ -123,12 +138,11 @@ function PhotoCycler() {
       if (busy.current) return
       busy.current = true
 
-      const idx      = nextPhoto.current % PHOTOS.length
-      const kbClass  = `kb-${Math.floor(Math.random() * KB_COUNT)}`
+      const idx     = nextPhoto.current % PHOTOS.length
+      const kbClass = `kb-${Math.floor(Math.random() * KB_COUNT)}`
       nextPhoto.current++
 
       if (aActiveRef.current) {
-        // A is showing → silently update B (it's invisible), then fade B in
         setSlotB({ photoIdx: idx, kbKey: Date.now(), kbClass })
         requestAnimationFrame(() => requestAnimationFrame(() => {
           setAActive(false)
@@ -136,7 +150,6 @@ function PhotoCycler() {
           setTimeout(() => { busy.current = false }, TRANSITION_MS + 100)
         }))
       } else {
-        // B is showing → silently update A (it's invisible), then fade A in
         setSlotA({ photoIdx: idx, kbKey: Date.now(), kbClass })
         requestAnimationFrame(() => requestAnimationFrame(() => {
           setAActive(true)
@@ -157,29 +170,21 @@ function PhotoCycler() {
       {/* Slot A */}
       <div className="absolute inset-0 overflow-hidden"
         style={{ zIndex: aActive ? 2 : 1, opacity: aActive ? 1 : 0, transition: FADE }}>
-        <img
-          key={slotA.kbKey}
-          src={PHOTOS[slotA.photoIdx].url}
-          alt={PHOTOS[slotA.photoIdx].location}
-          className={`absolute inset-0 w-full h-full object-cover will-change-transform ${slotA.kbClass}`}
-        />
+        <img key={slotA.kbKey} src={PHOTOS[slotA.photoIdx].url} alt={PHOTOS[slotA.photoIdx].location}
+          className={`absolute inset-0 w-full h-full object-cover will-change-transform ${slotA.kbClass}`} />
       </div>
 
       {/* Slot B */}
       <div className="absolute inset-0 overflow-hidden"
         style={{ zIndex: aActive ? 1 : 2, opacity: aActive ? 0 : 1, transition: FADE }}>
-        <img
-          key={slotB.kbKey}
-          src={PHOTOS[slotB.photoIdx].url}
-          alt={PHOTOS[slotB.photoIdx].location}
-          className={`absolute inset-0 w-full h-full object-cover will-change-transform ${slotB.kbClass}`}
-        />
+        <img key={slotB.kbKey} src={PHOTOS[slotB.photoIdx].url} alt={PHOTOS[slotB.photoIdx].location}
+          className={`absolute inset-0 w-full h-full object-cover will-change-transform ${slotB.kbClass}`} />
       </div>
 
       {/* Location badge */}
       <div className="absolute bottom-5 left-5 z-10 flex items-center gap-1.5"
         style={{ background: 'rgba(0,0,0,0.32)', backdropFilter: 'blur(10px)', borderRadius: 999, padding: '5px 14px', border: '1px solid rgba(255,255,255,0.15)' }}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3 text-amber-300">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3" style={{ color: BRAND.gold }}>
           <path d="M12 21c-4.418-4.418-7-8.582-7-11a7 7 0 1114 0c0 2.418-2.582 6.582-7 11z"/>
           <circle cx="12" cy="10" r="2"/>
         </svg>
@@ -206,13 +211,9 @@ function WaButton({ size = 'md', label = 'Chat on WhatsApp', hideIcon = false }:
     lg: 'px-8 py-4 text-base gap-3',
   }
   return (
-    <a
-      href={WA_LINK}
-      target="_blank"
-      rel="noopener noreferrer"
+    <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
       className={`inline-flex items-center justify-center font-semibold rounded-full transition-all duration-200 hover:scale-[1.03] hover:shadow-lg active:scale-[0.97] ${sizes[size]}`}
-      style={{ backgroundColor: '#25D366', color: '#fff', boxShadow: '0 4px 20px rgba(37,211,102,0.35)' }}
-    >
+      style={{ backgroundColor: '#25D366', color: '#fff', boxShadow: '0 4px 20px rgba(37,211,102,0.35)' }}>
       {!hideIcon && <WaIcon className={size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'} />}
       {label}
     </a>
@@ -243,18 +244,19 @@ function Bubble({ msg, idx }: { msg: typeof CHAT[0]; idx: number }) {
   )
 }
 
-// ─── Step item (own component — keeps hooks at top level) ─────────────────────
+// ─── Step item ────────────────────────────────────────────────────────────────
 function StepItem({ step, idx }: { step: typeof STEPS[0]; idx: number }) {
   const { ref, visible } = useReveal()
   return (
     <div ref={ref} className="flex gap-4 transition-all duration-500"
       style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateX(20px)', transitionDelay: `${idx * 120}ms` }}>
-      <div className="flex-shrink-0 w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center">
-        <span className="text-[10px] font-mono text-stone-400">{step.n}</span>
+      <div className="flex-shrink-0 w-9 h-9 rounded-full border flex items-center justify-center"
+        style={{ borderColor: BRAND.sand, backgroundColor: 'white' }}>
+        <span className="text-[10px] font-mono" style={{ color: BRAND.teal }}>{step.n}</span>
       </div>
       <div>
-        <h3 className="font-serif font-semibold text-stone-800 text-base mb-1">{step.title}</h3>
-        <p className="text-stone-500 text-sm font-light leading-relaxed">{step.desc}</p>
+        <h3 className="font-serif font-semibold text-base mb-1" style={{ color: BRAND.slate }}>{step.title}</h3>
+        <p className="text-sm font-light leading-relaxed text-stone-500">{step.desc}</p>
       </div>
     </div>
   )
@@ -271,7 +273,7 @@ export default function Home() {
   const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); if (email.trim()) setSent(true) }
 
   return (
-    <div className="bg-stone-50">
+    <div style={{ backgroundColor: BRAND.ivory }}>
 
       {/* ══════════════════════════════════════════════
           HERO
@@ -285,12 +287,13 @@ export default function Home() {
 
         {/* Nav */}
         <nav className="relative z-10 flex items-center justify-between px-5 sm:px-10 pt-6 fade-up delay-1">
-          <div className="flex items-center gap-2">
-            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" className="text-white/90">
+          <div className="flex items-center gap-2.5">
+            {/* Globe / compass mark — swap for logo SVG when file is provided */}
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className="text-white/90">
               <circle cx="11" cy="11" r="10" stroke="currentColor" strokeWidth="1.4"/>
               <path d="M1 11h20M11 1c-3 3-4.5 6-4.5 10s1.5 7 4.5 10M11 1c3 3 4.5 6 4.5 10s-1.5 7-4.5 10" stroke="currentColor" strokeWidth="1.4"/>
             </svg>
-            <span className="text-xs tracking-[0.2em] uppercase font-semibold" style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}>WanderAI</span>
+            <span className="font-serif font-light tracking-[0.12em] uppercase text-sm" style={{ color: 'rgba(255,255,255,0.95)', textShadow: '0 1px 6px rgba(0,0,0,0.4)', letterSpacing: '0.18em' }}>WanderAI</span>
           </div>
         </nav>
 
@@ -304,87 +307,83 @@ export default function Home() {
 
           <h1 className="hero-text font-serif mb-5 fade-up delay-3">
             <span className="block font-light" style={{ color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.35)' }}>Pack light.</span>
-            <span className="block font-black italic" style={{ color: '#c9920a', textShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>Dream heavy.</span>
+            <span className="block font-semibold italic" style={{ color: BRAND.gold, textShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>Dream heavy.</span>
           </h1>
 
-          <p className="fade-up delay-4 text-sm sm:text-base font-medium max-w-sm mb-8 leading-relaxed"
+          <p className="fade-up delay-4 text-sm sm:text-base font-light max-w-sm mb-8 leading-relaxed"
             style={{ color: '#fff', textShadow: '0 1px 8px rgba(0,0,0,0.55)' }}>
             Your personal AI travel agent lives on WhatsApp.
             No app to download, no account to create.
           </p>
 
-          {/* Primary CTA — WhatsApp */}
           <div className="fade-up delay-5 flex flex-col sm:flex-row items-center gap-4 mb-8">
             <WaButton size="lg" label="Start planning on WhatsApp" hideIcon />
-            <a href="#how"
-              className="text-sm font-medium transition-colors"
+            <a href="#how" className="text-sm font-light transition-colors"
               style={{ color: 'rgba(255,255,255,0.9)', textShadow: '0 1px 6px rgba(0,0,0,0.5)', textDecoration: 'underline', textUnderlineOffset: '4px' }}>
               See how it works ↓
             </a>
           </div>
 
-          {/* Social proof — Instagram style */}
+          {/* Social proof */}
           <div className="fade-up delay-6 flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <a
-                href="https://www.instagram.com/wanderai.travels"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
-              >
-                <svg viewBox="0 0 24 24" fill="white" className="w-3.5 h-3.5" style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))' }}>
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-                </svg>
-                <span className="text-xs font-semibold" style={{ color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>
-                  @wanderai.travels
-                </span>
-              </a>
-              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.75)', textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>· 2,847 followers</span>
-            </div>
+            <a href="https://www.instagram.com/wanderai.travels" target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+              <svg viewBox="0 0 24 24" fill="white" className="w-3.5 h-3.5" style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))' }}>
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+              </svg>
+              <span className="text-xs font-medium" style={{ color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>@wanderai.travels</span>
+            </a>
+            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.75)', textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>· 2,847 followers</span>
           </div>
         </div>
 
-        {/* Bottom */}
+        {/* Bottom bar */}
         <div className="relative z-10 flex justify-between items-center px-5 sm:px-10 pb-5 fade-up delay-6">
-          <span className="text-[10px] text-stone-400 tracking-widest uppercase">thewanderlust.app</span>
-          <span className="text-[10px] text-stone-400">© 2025 WanderAI</span>
+          <span className="text-[10px] tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>thewanderlust.app</span>
+          <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>© 2025 WanderAI</span>
         </div>
 
         {/* Corner deco */}
         <div className="absolute top-0 left-0 pointer-events-none">
-          <div className="absolute top-5 left-5 w-px h-6 bg-stone-300/40" />
-          <div className="absolute top-5 left-5 w-6 h-px bg-stone-300/40" />
+          <div className="absolute top-5 left-5 w-px h-6" style={{ backgroundColor: 'rgba(255,255,255,0.25)' }} />
+          <div className="absolute top-5 left-5 w-6 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.25)' }} />
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════
-          FEATURES
+          FEATURES — Why WanderAI
       ══════════════════════════════════════════════ */}
-      <section className="py-16 px-5 bg-white">
-        <div
-          ref={featuresReveal.ref}
-          className="max-w-4xl mx-auto transition-all duration-700"
-          style={{ opacity: featuresReveal.visible ? 1 : 0, transform: featuresReveal.visible ? 'none' : 'translateY(28px)' }}
-        >
-          <div className="text-center mb-10">
-            <p className="text-[10px] tracking-[0.35em] uppercase text-stone-400 mb-3">Why WanderAI</p>
-            <h2 className="font-serif text-2xl sm:text-3xl font-light text-stone-800">
+      <section className="py-20 px-5" style={{ backgroundColor: BRAND.sand }}>
+        <div ref={featuresReveal.ref} className="max-w-4xl mx-auto transition-all duration-700"
+          style={{ opacity: featuresReveal.visible ? 1 : 0, transform: featuresReveal.visible ? 'none' : 'translateY(28px)' }}>
+
+          <div className="text-center mb-12">
+            <p className="text-[10px] tracking-[0.35em] uppercase mb-3" style={{ color: BRAND.teal }}>Why WanderAI</p>
+            <h2 className="font-serif text-2xl sm:text-3xl font-light" style={{ color: BRAND.slate }}>
               Travel planning,{' '}
-              <span className="italic font-semibold" style={{ color: '#9a6f1e' }}>reinvented</span>
+              <span className="italic font-semibold" style={{ color: BRAND.gold }}>reinvented</span>
             </h2>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {FEATURES.map((f, i) => (
               <div key={i}
-                className={`bg-gradient-to-br ${f.gradient} rounded-2xl p-6 border border-white hover:shadow-md transition-all duration-300 group cursor-default`}
-                style={{ opacity: featuresReveal.visible ? 1 : 0, transform: featuresReveal.visible ? 'none' : 'translateY(20px)', transition: `opacity .5s ease ${i * 80 + 150}ms, transform .5s ease ${i * 80 + 150}ms, box-shadow .3s` }}>
-                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 inline-block">
-                  {f.emoji}
+                className="rounded-2xl p-6 border hover:shadow-md transition-all duration-300 group cursor-default"
+                style={{
+                  backgroundColor: BRAND.ivory,
+                  borderColor: 'rgba(235,223,209,0.6)',
+                  opacity: featuresReveal.visible ? 1 : 0,
+                  transform: featuresReveal.visible ? 'none' : 'translateY(20px)',
+                  transition: `opacity .5s ease ${i * 80 + 150}ms, transform .5s ease ${i * 80 + 150}ms, box-shadow .3s`,
+                }}>
+                <div className="mb-4 group-hover:scale-110 transition-transform duration-300 inline-block"
+                  style={{ color: f.accent }}>
+                  <f.Icon />
                 </div>
-                <h3 className="font-serif font-semibold text-stone-800 text-sm mb-1.5">{f.title}</h3>
-                <p className="text-stone-500 text-xs font-light leading-relaxed">{f.desc}</p>
-                <div className="mt-4 h-0.5 w-8 rounded-full transition-all duration-300 group-hover:w-16" style={{ backgroundColor: f.accent }} />
+                <h3 className="font-serif font-semibold text-sm mb-1.5" style={{ color: BRAND.slate }}>{f.title}</h3>
+                <p className="text-xs font-light leading-relaxed text-stone-500">{f.desc}</p>
+                <div className="mt-4 h-0.5 w-8 rounded-full transition-all duration-300 group-hover:w-16"
+                  style={{ backgroundColor: f.accent }} />
               </div>
             ))}
           </div>
@@ -394,32 +393,28 @@ export default function Home() {
       {/* ══════════════════════════════════════════════
           WHATSAPP DEMO
       ══════════════════════════════════════════════ */}
-      <section id="how" className="py-16 px-5 bg-stone-50">
-        <div
-          ref={demoReveal.ref}
-          className="max-w-4xl mx-auto transition-all duration-700"
-          style={{ opacity: demoReveal.visible ? 1 : 0, transform: demoReveal.visible ? 'none' : 'translateY(28px)' }}
-        >
-          <div className="text-center mb-10">
-            <p className="text-[10px] tracking-[0.35em] uppercase text-stone-400 mb-3">See it in action</p>
-            <h2 className="font-serif text-2xl sm:text-3xl font-light text-stone-800">
+      <section id="how" className="py-20 px-5" style={{ backgroundColor: BRAND.ivory }}>
+        <div ref={demoReveal.ref} className="max-w-4xl mx-auto transition-all duration-700"
+          style={{ opacity: demoReveal.visible ? 1 : 0, transform: demoReveal.visible ? 'none' : 'translateY(28px)' }}>
+
+          <div className="text-center mb-12">
+            <p className="text-[10px] tracking-[0.35em] uppercase mb-3" style={{ color: BRAND.teal }}>See it in action</p>
+            <h2 className="font-serif text-2xl sm:text-3xl font-light" style={{ color: BRAND.slate }}>
               Just send a{' '}
-              <span className="italic font-semibold" style={{ color: '#9a6f1e' }}>message</span>
+              <span className="italic font-semibold" style={{ color: BRAND.gold }}>message</span>
             </h2>
-            <p className="text-stone-500 text-sm mt-2 font-light max-w-xs mx-auto">
+            <p className="text-sm mt-2 font-light max-w-xs mx-auto text-stone-500">
               Tell us where you want to go — get a complete trip plan in minutes.
             </p>
           </div>
 
           <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
 
-            {/* Phone mockup — hidden on small mobile, shown md+ */}
+            {/* Phone mockup */}
             <div className="hidden sm:flex flex-shrink-0 justify-center w-full lg:w-auto">
               <div className="relative w-[270px]">
                 <div className="bg-stone-900 rounded-[36px] p-2.5 shadow-2xl">
                   <div className="bg-[#ece5dd] rounded-[27px] overflow-hidden">
-
-                    {/* WA header */}
                     <div className="bg-[#075e54] px-3.5 pt-8 pb-2.5 flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center flex-shrink-0">
                         <WaIcon className="w-4 h-4 text-white" />
@@ -429,13 +424,9 @@ export default function Home() {
                         <p className="text-emerald-300 text-[9px]">online · AI travel agent</p>
                       </div>
                     </div>
-
-                    {/* Messages */}
                     <div className="px-2.5 py-3 space-y-2.5 min-h-[360px] max-h-[360px] overflow-y-auto">
                       {CHAT.map((msg, i) => <Bubble key={i} msg={msg} idx={i} />)}
                     </div>
-
-                    {/* Input */}
                     <div className="bg-[#f0f0f0] px-2.5 py-2 flex items-center gap-2">
                       <div className="flex-1 bg-white rounded-full px-3 py-1.5 text-[10px] text-stone-400">Type a message</div>
                       <div className="w-7 h-7 rounded-full bg-[#25D366] flex items-center justify-center flex-shrink-0">
@@ -448,21 +439,21 @@ export default function Home() {
                 {/* Floating badges */}
                 <div className="absolute -right-3 top-14 bg-white rounded-xl shadow-md px-3 py-2 border border-stone-100">
                   <p className="text-[9px] text-stone-400 mb-0.5">Trip total</p>
-                  <p className="text-sm font-serif font-semibold text-stone-800">€1,380</p>
-                  <p className="text-[9px] text-emerald-600 font-medium">Within budget ✓</p>
+                  <p className="text-sm font-serif font-semibold" style={{ color: BRAND.slate }}>€1,380</p>
+                  <p className="text-[9px] font-medium" style={{ color: BRAND.teal }}>Within budget ✓</p>
                 </div>
                 <div className="absolute -left-4 bottom-20 bg-white rounded-xl shadow-md px-3 py-2 border border-stone-100">
                   <p className="text-[9px] text-stone-400 mb-0.5">Planned in</p>
-                  <p className="text-sm font-serif font-semibold text-stone-800">3 min</p>
-                  <div className="flex gap-0.5 mt-0.5">{[...Array(5)].map((_,i)=><span key={i} className="text-amber-400 text-[9px]">★</span>)}</div>
+                  <p className="text-sm font-serif font-semibold" style={{ color: BRAND.slate }}>3 min</p>
+                  <div className="flex gap-0.5 mt-0.5">{[...Array(5)].map((_,i)=><span key={i} className="text-[9px]" style={{ color: BRAND.gold }}>★</span>)}</div>
                 </div>
               </div>
             </div>
 
-            {/* Steps + mobile chat preview */}
+            {/* Steps */}
             <div className="flex-1 w-full space-y-6">
-              {/* Mobile-only: simplified chat (no phone frame) */}
-              <div className="sm:hidden bg-white rounded-2xl border border-stone-100 overflow-hidden">
+              {/* Mobile-only simplified chat */}
+              <div className="sm:hidden rounded-2xl border overflow-hidden" style={{ borderColor: BRAND.sand }}>
                 <div className="bg-[#075e54] px-4 py-3 flex items-center gap-2.5">
                   <div className="w-7 h-7 rounded-full bg-[#25D366] flex items-center justify-center">
                     <WaIcon className="w-3.5 h-3.5 text-white" />
@@ -477,12 +468,10 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Steps */}
               <div className="space-y-5">
                 {STEPS.map((s, i) => <StepItem key={i} step={s} idx={i} />)}
               </div>
 
-              {/* CTA inside demo section */}
               <div className="pt-2">
                 <WaButton size="md" label="Try it now on WhatsApp" />
                 <p className="text-[10px] text-stone-400 mt-2 font-light">Free to use · No download · No account</p>
@@ -495,65 +484,61 @@ export default function Home() {
       {/* ══════════════════════════════════════════════
           EMAIL WAITLIST CTA
       ══════════════════════════════════════════════ */}
-      <section className="py-16 px-5 bg-stone-900 relative overflow-hidden">
+      <section className="py-20 px-5 relative overflow-hidden" style={{ backgroundColor: BRAND.slate }}>
         <div className="orb-dark orb-dark-gold pointer-events-none" />
-        <div
-          ref={ctaReveal.ref}
-          className="relative max-w-lg mx-auto text-center transition-all duration-700"
-          style={{ opacity: ctaReveal.visible ? 1 : 0, transform: ctaReveal.visible ? 'none' : 'translateY(28px)' }}
-        >
-          <p className="text-[10px] tracking-[0.35em] uppercase text-stone-500 mb-3">Early access</p>
+        <div ref={ctaReveal.ref} className="relative max-w-lg mx-auto text-center transition-all duration-700"
+          style={{ opacity: ctaReveal.visible ? 1 : 0, transform: ctaReveal.visible ? 'none' : 'translateY(28px)' }}>
+
+          <p className="text-[10px] tracking-[0.35em] uppercase mb-3" style={{ color: BRAND.teal }}>Early access</p>
           <h2 className="font-serif text-2xl sm:text-3xl font-light text-white mb-2">
             Be first to{' '}
-            <span className="italic font-semibold" style={{ color: '#c49a3c' }}>board</span>
+            <span className="italic font-semibold" style={{ color: BRAND.gold }}>board</span>
           </h2>
-          <p className="text-stone-400 text-sm font-light mb-7 max-w-xs mx-auto">
+          <p className="text-sm font-light mb-7 max-w-xs mx-auto" style={{ color: 'rgba(247,244,239,0.55)' }}>
             Join the waitlist for priority access when we launch.
           </p>
 
           <div className="flex items-center justify-center gap-2.5 mb-6">
             <div className="flex -space-x-2">
               {AVATAR_COLORS.map((c, i) => (
-                <div key={i} className="w-7 h-7 rounded-full border-2 border-stone-800" style={{ backgroundColor: c, zIndex: 5 - i }} />
+                <div key={i} className="w-7 h-7 rounded-full border-2" style={{ backgroundColor: c, borderColor: BRAND.slate, zIndex: 5 - i }} />
               ))}
             </div>
-            <p className="text-xs text-stone-400"><span className="text-white font-medium">2,847</span> waiting</p>
+            <p className="text-xs" style={{ color: 'rgba(247,244,239,0.55)' }}><span className="text-white font-medium">2,847</span> waiting</p>
           </div>
 
-          {/* Email form */}
           {!sent ? (
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2.5 mb-4">
               <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="your@email.com" required
-                className="flex-1 px-5 py-3.5 rounded-full border border-stone-700 bg-stone-800 text-sm text-stone-200 placeholder-stone-500 focus:outline-none focus:border-stone-500 transition-colors" />
-              <button type="submit" className="btn-primary px-6 py-3.5 rounded-full text-sm font-semibold whitespace-nowrap text-stone-900"
-                style={{ backgroundColor: '#c49a3c' }}>
+                className="flex-1 px-5 py-3.5 rounded-full text-sm placeholder-stone-500 focus:outline-none transition-colors"
+                style={{ backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: BRAND.ivory }} />
+              <button type="submit" className="btn-primary px-6 py-3.5 rounded-full text-sm font-semibold whitespace-nowrap"
+                style={{ backgroundColor: BRAND.gold, color: BRAND.slate }}>
                 Join waitlist ↗
               </button>
             </form>
           ) : (
-            <div className="px-6 py-3.5 rounded-full border border-stone-700 bg-stone-800/60 mb-4">
-              <span className="text-sm text-stone-300 font-light">✦ You&apos;re on the list — first-class details incoming.</span>
+            <div className="px-6 py-3.5 rounded-full mb-4" style={{ border: '1px solid rgba(255,255,255,0.12)', backgroundColor: 'rgba(255,255,255,0.06)' }}>
+              <span className="text-sm font-light" style={{ color: BRAND.ivory }}>✦ You&apos;re on the list — first-class details incoming.</span>
             </div>
           )}
 
-          {/* Or just WA */}
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex-1 h-px bg-stone-800" />
-            <span className="text-[10px] text-stone-600 uppercase tracking-widest">or</span>
-            <div className="flex-1 h-px bg-stone-800" />
+            <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
+            <span className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.25)' }}>or</span>
+            <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
           </div>
           <WaButton size="md" label="Chat with us on WhatsApp" />
 
-          <p className="mt-4 text-[10px] text-stone-600 font-light">No spam. Unsubscribe anytime.</p>
+          <p className="mt-4 text-[10px] font-light" style={{ color: 'rgba(255,255,255,0.2)' }}>No spam. Unsubscribe anytime.</p>
 
-          <div className="mt-10 pt-6 border-t border-stone-800 flex justify-between text-[10px] text-stone-600">
+          <div className="mt-10 pt-6 flex justify-between text-[10px]" style={{ borderTop: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.2)' }}>
             <span className="tracking-widest uppercase">thewanderlust.app</span>
             <span>© 2025 WanderAI</span>
           </div>
         </div>
       </section>
-
 
     </div>
   )
