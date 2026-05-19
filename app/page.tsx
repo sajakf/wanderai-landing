@@ -56,29 +56,39 @@ const CHAT = [
   { from: 'user', text: "This is perfect. Book the flights please! 🙌", time: '10:06' },
 ]
 
-// ─── W mark logo (calligraphic W + plane, from brand handoff) ────────────────
+// ─── W mark logo (calligraphic W + plane, traced from brand handoff) ─────────
 function WMark({ className = 'w-8 h-6', color = 'currentColor' }: { className?: string; color?: string }) {
   return (
-    <svg viewBox="0 0 180 115" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      {/* Calligraphic W with decorative left tail */}
+    <svg viewBox="0 0 250 158" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/*
+        Single continuous stroke:
+        1. Left decorative curl — sweeps UP-LEFT then back down
+        2. Left valley at bottom-left
+        3. Rising to center area
+        4. Small teardrop loop at center (cursive W characteristic)
+        5. Down to right valley
+        6. Dramatic sweep UP-RIGHT to plane tip
+      */}
       <path
-        d="M18 88
-           C2 72 -1 48 16 34
-           C28 22 44 28 41 48
-           C38 64 26 74 35 90
-           C44 104 60 102 64 84
-           C70 60 60 34 76 18
-           C88 6 102 10 104 26
-           C106 40 98 52 100 58
-           C102 66 110 66 114 58
-           C118 46 110 22 126 8
-           C142 -6 164 4 174 24"
-        stroke={color} strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round"
+        d="M 60 92
+           C 36 76, 10 52, 22 32
+           C 32 14, 56 24, 54 52
+           C 52 72, 58 102, 72 120
+           C 84 134, 102 132, 112 112
+           C 122 92, 124 66, 124 56
+           C 124 48, 130 44, 134 52
+           C 140 64, 134 82, 125 88
+           C 116 94, 110 86, 113 76
+           C 116 66, 124 62, 130 70
+           C 138 82, 150 108, 158 118
+           C 170 132, 186 128, 196 112
+           C 210 92, 222 60, 232 26"
+        stroke={color} strokeWidth="6.5" strokeLinecap="round" strokeLinejoin="round"
       />
-      {/* Airplane silhouette at tip of right arm */}
-      <g transform="translate(174,24) rotate(-42)">
-        <path d="M0 0 L-10 -3.5 L-7 0 L-10 3.5 Z" fill={color}/>
-        <path d="M-7 -1 L-14 -6 L-13 -1 L-14 0 L-13 1 L-14 6 L-7 1 Z" fill={color} opacity="0.75"/>
+      {/* Airplane silhouette — body + wings, facing upper-right ~42° */}
+      <g transform="translate(233,23) rotate(-42)">
+        <path d="M0 0 L-13 -4.5 L-9 0 L-13 4.5 Z" fill={color}/>
+        <path d="M-9 -1 L-17 -8 L-15.5 -1 L-17 1 L-15.5 1 L-17 8 L-9 1 Z" fill={color} opacity="0.8"/>
       </g>
     </svg>
   )
