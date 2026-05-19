@@ -56,48 +56,88 @@ const CHAT = [
   { from: 'user', text: "This is perfect. Book the flights please! 🙌", time: '10:06' },
 ]
 
-// ─── Feature icon components ──────────────────────────────────────────────────
+// ─── W mark logo (calligraphic W + plane, from brand handoff) ────────────────
+function WMark({ className = 'w-8 h-6', color = 'currentColor' }: { className?: string; color?: string }) {
+  return (
+    <svg viewBox="0 0 180 115" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Calligraphic W with decorative left tail */}
+      <path
+        d="M18 88
+           C2 72 -1 48 16 34
+           C28 22 44 28 41 48
+           C38 64 26 74 35 90
+           C44 104 60 102 64 84
+           C70 60 60 34 76 18
+           C88 6 102 10 104 26
+           C106 40 98 52 100 58
+           C102 66 110 66 114 58
+           C118 46 110 22 126 8
+           C142 -6 164 4 174 24"
+        stroke={color} strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round"
+      />
+      {/* Airplane silhouette at tip of right arm */}
+      <g transform="translate(174,24) rotate(-42)">
+        <path d="M0 0 L-10 -3.5 L-7 0 L-10 3.5 Z" fill={color}/>
+        <path d="M-7 -1 L-14 -6 L-13 -1 L-14 0 L-13 1 L-14 6 L-7 1 Z" fill={color} opacity="0.75"/>
+      </g>
+    </svg>
+  )
+}
+
+// ─── Feature icon components (from brand handoff) ─────────────────────────────
 function IconChat() {
+  // Speech bubble with three dots
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-9 h-9">
-      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-      <line x1="9" y1="10" x2="15" y2="10"/>
-      <line x1="9" y1="13" x2="13" y2="13"/>
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10">
+      <path d="M8 10C8 7.8 9.8 6 12 6H36C38.2 6 40 7.8 40 10V28C40 30.2 38.2 32 36 32H27L22 38L17 32H12C9.8 32 8 30.2 8 28V10Z"/>
+      <circle cx="17" cy="21" r="1.8" fill="currentColor" stroke="none"/>
+      <circle cx="24" cy="21" r="1.8" fill="currentColor" stroke="none"/>
+      <circle cx="31" cy="21" r="1.8" fill="currentColor" stroke="none"/>
     </svg>
   )
 }
-function IconCompass() {
+function IconRoute() {
+  // Winding road with sparkle stars
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-9 h-9">
-      <circle cx="12" cy="12" r="10"/>
-      <polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/>
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10">
+      <path d="M8 42C14 38 14 30 22 26C30 22 32 14 40 8" strokeWidth="2.2"/>
+      <path d="M17 17L18.5 13L20 17L24 18.5L20 20L18.5 24L17 20L13 18.5Z" strokeWidth="1.4"/>
+      <path d="M34 36L34.8 34L35.6 36L37.6 36.8L35.6 37.5L34.8 39.5L34 37.5L32 36.8Z" strokeWidth="1.2"/>
     </svg>
   )
 }
-function IconClock() {
+function IconClockPlane() {
+  // Clock face + small airplane at edge
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-9 h-9">
-      <circle cx="12" cy="12" r="10"/>
-      <polyline points="12 6 12 12 16 14"/>
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10">
+      <circle cx="22" cy="26" r="16"/>
+      <polyline points="22,16 22,26 29,30"/>
+      {/* Small plane upper-right */}
+      <g transform="translate(34,11) rotate(-45)">
+        <path d="M0 0L-5 -1.8L-3.5 0L-5 1.8Z" fill="currentColor" stroke="none"/>
+        <path d="M-3.5 -0.5L-7.5 -3.5L-7 -0.5L-7.5 0.5L-7 0.5L-7.5 3.5L-3.5 0.5Z" fill="currentColor" stroke="none" opacity="0.8"/>
+      </g>
     </svg>
   )
 }
 function IconWallet() {
+  // Open wallet with coin
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-9 h-9">
-      <rect x="2" y="5" width="20" height="14" rx="2"/>
-      <path d="M2 10h20"/>
-      <circle cx="16" cy="15" r="1" fill="currentColor" stroke="none"/>
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10">
+      <rect x="6" y="14" width="36" height="26" rx="3"/>
+      <path d="M6 22H42"/>
+      <rect x="28" y="27" width="13" height="9" rx="2.5"/>
+      <circle cx="34.5" cy="31.5" r="2.5" fill="currentColor" stroke="none" opacity="0.7"/>
     </svg>
   )
 }
 
 // ─── Feature cards ────────────────────────────────────────────────────────────
 const FEATURES = [
-  { Icon: IconChat,    accent: BRAND.teal,       title: 'No app needed',    desc: 'Chat on WhatsApp — the app you already use every day.' },
-  { Icon: IconCompass, accent: BRAND.gold,       title: 'AI trip planning', desc: 'Full personalised itinerary in under 3 minutes.' },
-  { Icon: IconClock,   accent: BRAND.terracotta, title: '24 / 7 available', desc: 'Ask at midnight, change plans mid-flight. Always on.' },
-  { Icon: IconWallet,  accent: BRAND.slate,      title: 'Budget-smart',     desc: 'Set your budget once — we stay within it, always.' },
+  { Icon: IconChat,       accent: BRAND.teal,       title: 'No app needed',    desc: 'Chat on WhatsApp — the app you already use every day.' },
+  { Icon: IconRoute,      accent: BRAND.gold,       title: 'AI trip planning', desc: 'Full personalised itinerary in under 3 minutes.' },
+  { Icon: IconClockPlane, accent: BRAND.terracotta, title: '24 / 7 available', desc: 'Ask at midnight, change plans mid-flight. Always on.' },
+  { Icon: IconWallet,     accent: BRAND.slate,      title: 'Budget-smart',     desc: 'Set your budget once — we stay within it, always.' },
 ]
 
 const STEPS = [
@@ -287,13 +327,9 @@ export default function Home() {
 
         {/* Nav */}
         <nav className="relative z-10 flex items-center justify-between px-5 sm:px-10 pt-6 fade-up delay-1">
-          <div className="flex items-center gap-2.5">
-            {/* Globe / compass mark — swap for logo SVG when file is provided */}
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className="text-white/90">
-              <circle cx="11" cy="11" r="10" stroke="currentColor" strokeWidth="1.4"/>
-              <path d="M1 11h20M11 1c-3 3-4.5 6-4.5 10s1.5 7 4.5 10M11 1c3 3 4.5 6 4.5 10s-1.5 7-4.5 10" stroke="currentColor" strokeWidth="1.4"/>
-            </svg>
-            <span className="font-serif font-light tracking-[0.12em] uppercase text-sm" style={{ color: 'rgba(255,255,255,0.95)', textShadow: '0 1px 6px rgba(0,0,0,0.4)', letterSpacing: '0.18em' }}>WanderAI</span>
+          <div className="flex items-center gap-2">
+            <WMark className="w-10 h-7" color="rgba(200,163,107,0.95)" />
+            <span className="font-serif font-light text-base" style={{ color: 'rgba(255,255,255,0.95)', textShadow: '0 1px 6px rgba(0,0,0,0.4)', letterSpacing: '0.06em' }}>WanderAi</span>
           </div>
         </nav>
 
@@ -340,7 +376,7 @@ export default function Home() {
         {/* Bottom bar */}
         <div className="relative z-10 flex justify-between items-center px-5 sm:px-10 pb-5 fade-up delay-6">
           <span className="text-[10px] tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>thewanderlust.app</span>
-          <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>© 2025 WanderAI</span>
+          <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>© 2025 WanderAi</span>
         </div>
 
         {/* Corner deco */}
@@ -535,7 +571,7 @@ export default function Home() {
 
           <div className="mt-10 pt-6 flex justify-between text-[10px]" style={{ borderTop: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.2)' }}>
             <span className="tracking-widest uppercase">thewanderlust.app</span>
-            <span>© 2025 WanderAI</span>
+            <span>© 2025 WanderAi</span>
           </div>
         </div>
       </section>
