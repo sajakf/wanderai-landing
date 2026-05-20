@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { WA_LINK } from '@/lib/messaging'
 
 // ─── Brand colours ────────────────────────────────────────────────────────────
@@ -11,6 +11,73 @@ const BRAND = {
   terracotta: '#C56A4E',
   teal:       '#517D86',
   slate:      '#2E3538',
+}
+
+// ─── Modal content data ───────────────────────────────────────────────────────
+type ModalData = { category: string; accent: string; title: string; body: string }
+const MODALS: Record<string, ModalData> = {
+  // Product
+  features: {
+    category: 'Product',
+    accent: BRAND.teal,
+    title: 'Everything you need, nothing you don\'t.',
+    body: 'WanderAi searches flights, hotels and experiences in seconds. Fast responses, 24/7 availability, and smart personalised recommendations — all delivered as a clean, readable summary directly in WhatsApp.',
+  },
+  howItWorks: {
+    category: 'Product',
+    accent: BRAND.teal,
+    title: 'Three messages to your perfect trip.',
+    body: 'Tell us where you want to go, your dates and your budget. WanderAi listens, understands and builds a full day-by-day itinerary in under three minutes — no forms, no apps, no waiting.',
+  },
+  aiTrip: {
+    category: 'Product',
+    accent: BRAND.gold,
+    title: 'Your personal AI travel curator.',
+    body: 'From a single message, WanderAi crafts a complete, personalised travel plan. Every recommendation is tailored to your style, budget and dreams — not a generic list.',
+  },
+  hotelSearch: {
+    category: 'Product',
+    accent: BRAND.terracotta,
+    title: 'The world\'s best hotels, one message away.',
+    body: 'Search thousands of properties across top destinations, filtered by your budget, dates and preferences — without ever leaving your WhatsApp conversation.',
+  },
+  flightSearch: {
+    category: 'Product',
+    accent: BRAND.teal,
+    title: 'Best flights found, instantly.',
+    body: 'WanderAi scans live availability for your route and dates, then presents the top options in a clear, readable format. No browser tabs. No comparison sites.',
+  },
+  // Company
+  about: {
+    category: 'Company',
+    accent: BRAND.gold,
+    title: 'Intelligent travel, delivered through a message.',
+    body: 'WanderAi is a luxury AI travel agent that blends human taste with artificial intelligence. We design personalised journeys with precision, insight and soul — seamlessly through WhatsApp.',
+  },
+  blog: {
+    category: 'Company',
+    accent: BRAND.teal,
+    title: 'Stories, guides & travel inspiration.',
+    body: 'Destination deep-dives, insider tips from the WanderAi team, and real stories from travellers who let AI plan their adventures. Follow along for your next big idea.',
+  },
+  careers: {
+    category: 'Company',
+    accent: BRAND.terracotta,
+    title: 'Help us reinvent how people explore the world.',
+    body: 'We\'re a small, ambitious team of designers, engineers and travel lovers. If you believe travel should be effortless, intelligent and deeply personal — we want to meet you.',
+  },
+  press: {
+    category: 'Company',
+    accent: BRAND.teal,
+    title: 'Recognised for reimagining travel.',
+    body: 'WanderAi has been featured for its unique approach to AI-powered travel planning. For interviews, media kits and press enquiries, get in touch with our team.',
+  },
+  partners: {
+    category: 'Company',
+    accent: BRAND.gold,
+    title: 'Built on the world\'s best travel infrastructure.',
+    body: 'We work with leading hotels, airlines and experience providers to bring you exceptional options at every price point. Interested in partnering with WanderAi? Let\'s talk.',
+  },
 }
 
 // ─── Curated travel photos (verified Unsplash IDs) ───────────────────────────
@@ -88,6 +155,132 @@ function WMark({ className = 'w-8 h-6', color = 'currentColor' }: { className?: 
         <path d="M-8.5 -1 L-16 -7.5 L-14.5 -1 L-16 1 L-14.5 1 L-16 7.5 L-8.5 1 Z" fill={color} opacity="0.85"/>
       </g>
     </svg>
+  )
+}
+
+// ─── Modal icon (per modal key) ───────────────────────────────────────────────
+function ModalIcon({ name, color }: { name: string; color: string }) {
+  const s = { fill: 'none', stroke: color, strokeWidth: 1.6, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, className: 'w-10 h-10' }
+  const icons: Record<string, React.ReactNode> = {
+    features:    <svg viewBox="0 0 40 40" {...s}><path d="M20 6l2.5 8H30l-6.5 4.5 2.5 8L20 22l-6 4.5 2.5-8L10 14h7.5z"/></svg>,
+    howItWorks:  <svg viewBox="0 0 40 40" {...s}><circle cx="10" cy="20" r="4"/><circle cx="20" cy="12" r="4"/><circle cx="30" cy="20" r="4"/><path d="M14 20h2M24 20h2"/></svg>,
+    aiTrip:      <svg viewBox="0 0 40 40" {...s}><circle cx="20" cy="20" r="14"/><path d="M26 14l-3.5 8-8 3.5 3.5-8 8-3.5z"/></svg>,
+    hotelSearch: <svg viewBox="0 0 40 40" {...s}><rect x="8" y="14" width="24" height="20" rx="2"/><path d="M15 34V26h10v8M2 34h36M13 14V8h14v6"/><rect x="17" y="18" width="6" height="5" rx="1"/></svg>,
+    flightSearch:<svg viewBox="0 0 40 40" {...s}><path d="M6 28l6-2 16-16 4 4-16 16-2 6zM22 12l6 6"/><path d="M8 32l4-1 1-4"/></svg>,
+    about:       <svg viewBox="0 0 40 40" {...s}><circle cx="20" cy="20" r="14"/><path d="M6 20h28M20 6c-4 4-6 8-6 14s2 10 6 14M20 6c4 4 6 8 6 14s-2 10-6 14"/></svg>,
+    blog:        <svg viewBox="0 0 40 40" {...s}><path d="M10 8h20a2 2 0 012 2v22a2 2 0 01-2 2H10a2 2 0 01-2-2V10a2 2 0 012-2z"/><path d="M14 16h12M14 21h12M14 26h8"/></svg>,
+    careers:     <svg viewBox="0 0 40 40" {...s}><rect x="6" y="16" width="28" height="18" rx="2"/><path d="M14 16v-4a2 2 0 012-2h8a2 2 0 012 2v4M20 25v-4M18 23h4"/></svg>,
+    press:       <svg viewBox="0 0 40 40" {...s}><path d="M8 10h24v24H8zM8 16h24M14 10v24M14 22h12M14 27h8"/></svg>,
+    partners:    <svg viewBox="0 0 40 40" {...s}><path d="M6 22c0-2 2-4 4-4l6-6c1-1 3-1 4 0l2 2-8 8 2 2 10-10 2 2-10 10 2 2 8-8 2 2-8 8c-1 1-3 1-4 0l-8-8c-2-2-2-4-4-4"/></svg>,
+  }
+  return <>{icons[name] ?? null}</>
+}
+
+// ─── Modal overlay ────────────────────────────────────────────────────────────
+function Modal({ modalKey, visible, onClose }: { modalKey: string | null; visible: boolean; onClose: () => void }) {
+  // Keep last data during fade-out so content doesn't snap away
+  const [cachedData, setCachedData] = useState<ModalData | null>(null)
+  const cachedKey = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (modalKey) { setCachedData(MODALS[modalKey]); cachedKey.current = modalKey }
+  }, [modalKey])
+
+  // Lock body scroll while open
+  useEffect(() => {
+    document.body.style.overflow = visible ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [visible])
+
+  // Escape key
+  useEffect(() => {
+    if (!visible) return
+    const fn = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', fn)
+    return () => window.removeEventListener('keydown', fn)
+  }, [visible, onClose])
+
+  if (!cachedData && !visible) return null
+  const data = cachedData
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 300,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '20px',
+        backgroundColor: visible ? 'rgba(0,0,0,0.65)' : 'rgba(0,0,0,0)',
+        backdropFilter: visible ? 'blur(14px)' : 'blur(0px)',
+        WebkitBackdropFilter: visible ? 'blur(14px)' : 'blur(0px)',
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.3s ease, background-color 0.3s ease',
+        pointerEvents: visible ? 'auto' : 'none',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          backgroundColor: BRAND.slate,
+          border: `1px solid rgba(200,163,107,0.2)`,
+          borderRadius: '20px',
+          padding: '36px 32px 32px',
+          maxWidth: '400px',
+          width: '100%',
+          position: 'relative',
+          transform: visible ? 'translateY(0)' : 'translateY(24px)',
+          transition: 'transform 0.35s cubic-bezier(0.16,1,0.3,1)',
+        }}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute', top: 16, right: 18,
+            color: 'rgba(255,255,255,0.4)', fontSize: '1.4rem',
+            lineHeight: 1, background: 'none', border: 'none', cursor: 'pointer',
+            transition: 'color 0.2s',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.9)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
+        >×</button>
+
+        {/* W mark + category */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+          <WMark className="w-8 h-6" color={BRAND.gold} />
+          <span style={{ fontSize: '0.6rem', letterSpacing: '0.3em', textTransform: 'uppercase', color: data?.accent ?? BRAND.teal, fontFamily: 'var(--font-norway)' }}>
+            {data?.category}
+          </span>
+        </div>
+
+        {/* Icon */}
+        <div style={{ marginBottom: 16 }}>
+          <ModalIcon name={cachedKey.current ?? ''} color={data?.accent ?? BRAND.gold} />
+        </div>
+
+        {/* Title */}
+        <h3 style={{
+          fontFamily: 'var(--font-playfair)', fontWeight: 400, fontStyle: 'normal',
+          fontSize: '1.3rem', lineHeight: 1.25, color: '#fff', marginBottom: 12,
+        }}>
+          {data?.title}
+        </h3>
+
+        {/* Body */}
+        <p style={{
+          fontFamily: 'var(--font-norway)', fontWeight: 300, fontSize: '0.82rem',
+          lineHeight: 1.65, color: 'rgba(247,244,239,0.62)', marginBottom: 28,
+        }}>
+          {data?.body}
+        </p>
+
+        {/* Gold rule */}
+        <div style={{ height: 1, background: `linear-gradient(to right, ${data?.accent ?? BRAND.gold}44, transparent)`, marginBottom: 24 }} />
+
+        {/* CTA */}
+        <WaButton size="md" label="Start planning on WhatsApp" />
+      </div>
+    </div>
   )
 }
 
@@ -311,6 +504,19 @@ function StepItem({ step, idx }: { step: typeof STEPS[0]; idx: number }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Home() {
+  const [activeModal, setActiveModal] = useState<string | null>(null)
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const openModal = useCallback((key: string) => {
+    setActiveModal(key)
+    requestAnimationFrame(() => setModalVisible(true))
+  }, [])
+
+  const closeModal = useCallback(() => {
+    setModalVisible(false)
+    setTimeout(() => setActiveModal(null), 320)
+  }, [])
+
   const featuresReveal = useReveal()
   const demoReveal = useReveal()
   const ctaReveal = useReveal()
@@ -623,9 +829,6 @@ export default function Home() {
               </div>
               <p className="text-[11px] font-light italic" style={{ color: 'rgba(255,255,255,0.3)' }}>Pack light. Dream heavy.</p>
             </div>
-            <div className="flex-shrink-0">
-              <WaButton size="sm" label="Chat on WhatsApp" />
-            </div>
           </div>
 
           {/* Sitemap grid */}
@@ -634,8 +837,21 @@ export default function Home() {
             <div>
               <p className="text-[9px] tracking-[0.3em] uppercase mb-4 font-medium" style={{ color: BRAND.teal }}>Product</p>
               <ul className="space-y-2.5">
-                {['Features', 'How it works', 'AI Trip Planning', 'Hotel Search', 'Flight Search'].map(l => (
-                  <li key={l}><a href="#" className="text-xs font-light hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.42)' }}>{l}</a></li>
+                {([
+                  ['Features',        'features'],
+                  ['How it works',    'howItWorks'],
+                  ['AI Trip Planning','aiTrip'],
+                  ['Hotel Search',    'hotelSearch'],
+                  ['Flight Search',   'flightSearch'],
+                ] as [string, string][]).map(([label, key]) => (
+                  <li key={key}>
+                    <button
+                      onClick={() => openModal(key)}
+                      className="text-xs font-light hover:opacity-100 transition-opacity text-left"
+                      style={{ color: 'rgba(255,255,255,0.42)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                      {label}
+                    </button>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -643,8 +859,21 @@ export default function Home() {
             <div>
               <p className="text-[9px] tracking-[0.3em] uppercase mb-4 font-medium" style={{ color: BRAND.teal }}>Company</p>
               <ul className="space-y-2.5">
-                {['About us', 'Blog', 'Careers', 'Press', 'Partners'].map(l => (
-                  <li key={l}><a href="#" className="text-xs font-light hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.42)' }}>{l}</a></li>
+                {([
+                  ['About us', 'about'],
+                  ['Blog',     'blog'],
+                  ['Careers',  'careers'],
+                  ['Press',    'press'],
+                  ['Partners', 'partners'],
+                ] as [string, string][]).map(([label, key]) => (
+                  <li key={key}>
+                    <button
+                      onClick={() => openModal(key)}
+                      className="text-xs font-light hover:opacity-100 transition-opacity text-left"
+                      style={{ color: 'rgba(255,255,255,0.42)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                      {label}
+                    </button>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -721,6 +950,9 @@ export default function Home() {
 
         </div>
       </footer>
+
+      {/* ── Modal overlay ── */}
+      <Modal modalKey={activeModal} visible={modalVisible} onClose={closeModal} />
 
     </div>
   )
