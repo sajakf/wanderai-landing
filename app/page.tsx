@@ -545,10 +545,10 @@ export default function Home() {
             </div>
 
             {/* Center — W mark + wordmark stacked */}
-            <div className="flex flex-col items-center gap-1 mx-auto sm:mx-0">
-              <WMark className="w-14 h-10" color="rgba(200,163,107,0.96)" />
-              <span className="font-serif font-light tracking-[0.18em] uppercase text-[11px]"
-                style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 1px 8px rgba(0,0,0,0.5)', letterSpacing: '0.22em' }}>
+            <div className="flex flex-col items-center gap-1.5 mx-auto sm:mx-0">
+              <WMark className="w-20 h-14" color="rgba(200,163,107,0.96)" />
+              <span className="font-serif font-light uppercase text-[13px]"
+                style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 1px 8px rgba(0,0,0,0.5)', letterSpacing: '0.26em' }}>
                 WanderAi
               </span>
             </div>
