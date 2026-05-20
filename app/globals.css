@@ -10,13 +10,13 @@ html, body {
   scroll-behavior: smooth;
 }
 
-/* ─── Video overlay ─── */
+/* ─── Video overlay — heavier at bottom for luxury depth ─── */
 .video-overlay {
   background: linear-gradient(
     to bottom,
-    rgba(0,0,0,0.08) 0%,
-    rgba(0,0,0,0.18) 50%,
-    rgba(0,0,0,0.45) 100%
+    rgba(0,0,0,0.12) 0%,
+    rgba(0,0,0,0.10) 40%,
+    rgba(0,0,0,0.55) 100%
   );
 }
 
@@ -57,11 +57,18 @@ html, body {
   50%      { transform: translate(22px,-40px); }
 }
 
-/* ─── Hero text ─── */
+/* ─── Hero text — oversized cinematic ─── */
 .hero-text {
   font-size: clamp(2.8rem, 8.5vw, 8rem);
   line-height: 1.04;
   letter-spacing: -0.025em;
+}
+
+/* New XL hero for luxury redesign */
+.hero-xl {
+  font-size: clamp(3.6rem, 12vw, 10.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
 }
 
 /* ─── Grain ─── */
@@ -98,14 +105,34 @@ html, body {
 .delay-4 { animation-delay: 0.58s; }
 .delay-5 { animation-delay: 0.76s; }
 .delay-6 { animation-delay: 0.94s; }
+.delay-7 { animation-delay: 1.10s; }
+.delay-8 { animation-delay: 1.26s; }
 
-/* ─── Floating WA button ping ─── */
-@keyframes pingSlow {
-  0%   { transform: scale(1);   opacity: 0.35; }
-  70%  { transform: scale(1.7); opacity: 0; }
-  100% { transform: scale(1.7); opacity: 0; }
+/* ─── Scroll indicator ─── */
+@keyframes scrollDrop {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateY(100%);  opacity: 0; }
 }
-.animate-ping-slow { animation: pingSlow 2.2s ease-out infinite; }
+.scroll-line {
+  position: absolute;
+  inset: 0;
+  animation: scrollDrop 2s cubic-bezier(0.4,0,0.2,1) infinite;
+}
+
+/* ─── Nav link ─── */
+.nav-link {
+  font-size: 0.6rem;
+  font-family: var(--font-norway);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.72);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+.nav-link:hover { color: rgba(255,255,255,1); }
 
 /* ─── Button ─── */
 .btn-primary {

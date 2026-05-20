@@ -333,75 +333,134 @@ export default function Home() {
       <section className="relative h-screen flex flex-col overflow-hidden">
         <PhotoCycler />
         <div className="video-overlay absolute inset-0" />
-        <div className="grain absolute inset-0 opacity-[0.09] pointer-events-none" />
+        <div className="grain absolute inset-0 opacity-[0.07] pointer-events-none" />
         <div className="orb orb-gold" />
         <div className="orb orb-rose" />
 
-        {/* Nav */}
-        <nav className="relative z-10 flex items-center justify-between px-5 sm:px-10 pt-6 fade-up delay-1">
-          <div className="flex items-center gap-2">
-            <WMark className="w-10 h-7" color="rgba(200,163,107,0.95)" />
-            <span className="font-serif font-light text-base" style={{ color: 'rgba(255,255,255,0.95)', textShadow: '0 1px 6px rgba(0,0,0,0.4)', letterSpacing: '0.06em' }}>WanderAi</span>
+        {/* ── Centered nav: links · logo · links ── */}
+        <nav className="relative z-10 fade-up delay-1 px-6 sm:px-12 pt-7">
+          <div className="flex items-center justify-between">
+
+            {/* Left nav links */}
+            <div className="hidden sm:flex items-center gap-7">
+              <a href="#features" className="nav-link">Features</a>
+              <a href="#how" className="nav-link">How it works</a>
+            </div>
+
+            {/* Center — W mark + wordmark stacked */}
+            <div className="flex flex-col items-center gap-1 mx-auto sm:mx-0">
+              <WMark className="w-14 h-10" color="rgba(200,163,107,0.96)" />
+              <span className="font-serif font-light tracking-[0.18em] uppercase text-[11px]"
+                style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 1px 8px rgba(0,0,0,0.5)', letterSpacing: '0.22em' }}>
+                WanderAi
+              </span>
+            </div>
+
+            {/* Right nav links */}
+            <div className="hidden sm:flex items-center gap-7">
+              <a href="#join" className="nav-link">Join waitlist</a>
+              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="nav-link"
+                style={{ color: 'rgba(200,163,107,0.9)' }}>
+                WhatsApp ↗
+              </a>
+            </div>
+
+            {/* Mobile right — WhatsApp only */}
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+              className="sm:hidden nav-link" style={{ color: 'rgba(200,163,107,0.9)' }}>WA ↗</a>
           </div>
+
+          {/* Thin gold rule under nav */}
+          <div className="mt-5 h-px mx-auto w-full max-w-5xl" style={{ background: 'linear-gradient(to right, transparent, rgba(200,163,107,0.25), transparent)' }} />
         </nav>
 
-        {/* Hero body */}
+        {/* ── Hero body ── */}
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-5 text-center">
-          <div className="fade-up delay-2 flex items-center gap-2.5 mb-7">
-            <div className="w-8 h-px bg-white/40" />
-            <span className="text-[10px] tracking-[0.35em] uppercase font-light" style={{ color: 'rgba(255,255,255,0.82)', textShadow: '0 1px 4px rgba(0,0,0,0.5)', letterSpacing: '0.3em' }}>AI travel agent · WhatsApp</span>
-            <div className="w-8 h-px bg-white/40" />
+
+          {/* Eyebrow label */}
+          <div className="fade-up delay-2 flex items-center gap-3 mb-8">
+            <div className="w-10 h-px" style={{ background: 'rgba(200,163,107,0.55)' }} />
+            <span className="text-[9px] tracking-[0.45em] uppercase font-light"
+              style={{ color: 'rgba(255,255,255,0.78)', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+              AI travel agent &nbsp;·&nbsp; WhatsApp
+            </span>
+            <div className="w-10 h-px" style={{ background: 'rgba(200,163,107,0.55)' }} />
           </div>
 
-          <h1 className="hero-text font-serif mb-5 fade-up delay-3">
-            <span className="block font-light" style={{ color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.35)' }}>Pack light.</span>
-            <span className="block font-semibold italic" style={{ color: BRAND.gold, textShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>Dream heavy.</span>
-          </h1>
+          {/* Oversized headline with corner brackets */}
+          <div className="relative fade-up delay-3 px-8 sm:px-12">
+            {/* Top-left bracket */}
+            <span className="absolute -top-4 -left-1 sm:left-2 w-5 h-5 border-t border-l pointer-events-none"
+              style={{ borderColor: 'rgba(200,163,107,0.45)' }} />
+            {/* Top-right bracket */}
+            <span className="absolute -top-4 -right-1 sm:right-2 w-5 h-5 border-t border-r pointer-events-none"
+              style={{ borderColor: 'rgba(200,163,107,0.45)' }} />
 
-          <p className="fade-up delay-4 text-sm sm:text-base font-light max-w-sm mb-8 leading-relaxed"
-            style={{ color: '#fff', textShadow: '0 1px 8px rgba(0,0,0,0.55)' }}>
-            Your personal AI travel agent lives on WhatsApp.
-            No app to download, no account to create.
+            <h1 className="hero-xl font-serif">
+              <span className="block font-light" style={{ color: '#fff', textShadow: '0 4px 24px rgba(0,0,0,0.4)' }}>
+                Pack light.
+              </span>
+              <span className="block font-semibold italic" style={{ color: BRAND.gold, textShadow: '0 4px 20px rgba(0,0,0,0.35)' }}>
+                Dream heavy.
+              </span>
+            </h1>
+
+            {/* Bottom-left bracket */}
+            <span className="absolute -bottom-4 -left-1 sm:left-2 w-5 h-5 border-b border-l pointer-events-none"
+              style={{ borderColor: 'rgba(200,163,107,0.45)' }} />
+            {/* Bottom-right bracket */}
+            <span className="absolute -bottom-4 -right-1 sm:right-2 w-5 h-5 border-b border-r pointer-events-none"
+              style={{ borderColor: 'rgba(200,163,107,0.45)' }} />
+          </div>
+
+          {/* Sub-copy */}
+          <p className="fade-up delay-4 mt-8 text-sm sm:text-base font-light max-w-xs leading-relaxed"
+            style={{ color: 'rgba(255,255,255,0.82)', textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>
+            Your personal AI travel agent, delivered through WhatsApp.
           </p>
 
-          <div className="fade-up delay-5 flex flex-col sm:flex-row items-center gap-4 mb-8">
+          {/* CTA */}
+          <div className="fade-up delay-5 mt-8 flex flex-col sm:flex-row items-center gap-4">
             <WaButton size="lg" label="Start planning on WhatsApp" hideIcon />
-            <a href="#how" className="text-sm font-light transition-colors"
-              style={{ color: 'rgba(255,255,255,0.9)', textShadow: '0 1px 6px rgba(0,0,0,0.5)', textDecoration: 'underline', textUnderlineOffset: '4px' }}>
-              See how it works ↓
-            </a>
           </div>
 
           {/* Social proof */}
-          <div className="fade-up delay-6 flex items-center gap-3">
+          <div className="fade-up delay-6 mt-6 flex items-center gap-2">
             <a href="https://www.instagram.com/wanderai.travels" target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
-              <svg viewBox="0 0 24 24" fill="white" className="w-3.5 h-3.5" style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))' }}>
+              <svg viewBox="0 0 24 24" fill="white" className="w-3 h-3 opacity-70">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
               </svg>
-              <span className="text-xs font-medium" style={{ color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>@wanderai.travels</span>
+              <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.65)', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+                @wanderai.travels &nbsp;·&nbsp; 2,847 followers
+              </span>
             </a>
-            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.75)', textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>· 2,847 followers</span>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="relative z-10 flex justify-between items-center px-5 sm:px-10 pb-5 fade-up delay-6">
-          <span className="text-[10px] tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>thewanderlust.app</span>
-          <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>© 2025 WanderAi</span>
+        {/* ── Scroll indicator — bottom center ── */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 fade-up delay-7 flex flex-col items-center gap-2">
+          <span className="text-[7px] tracking-[0.4em] uppercase"
+            style={{ color: 'rgba(255,255,255,0.45)', writingMode: 'vertical-rl', transform: 'rotate(180deg)', letterSpacing: '0.3em' }}>
+            Scroll
+          </span>
+          <div className="relative w-px h-14 overflow-hidden rounded-full"
+            style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
+            <div className="scroll-line absolute inset-0 rounded-full" style={{ backgroundColor: BRAND.gold }} />
+          </div>
         </div>
 
-        {/* Corner deco */}
-        <div className="absolute top-0 left-0 pointer-events-none">
-          <div className="absolute top-5 left-5 w-px h-6" style={{ backgroundColor: 'rgba(255,255,255,0.25)' }} />
-          <div className="absolute top-5 left-5 w-6 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.25)' }} />
+        {/* ── Location badge (bottom-left) + domain (bottom-right) ── */}
+        <div className="relative z-10 flex justify-between items-end px-5 sm:px-10 pb-5 fade-up delay-8">
+          <span className="text-[9px] tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>thewanderlust.app</span>
+          <span className="text-[9px]" style={{ color: 'rgba(255,255,255,0.35)' }}>© 2025 WanderAi</span>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════
           FEATURES — Why WanderAI
       ══════════════════════════════════════════════ */}
-      <section className="py-20 px-5" style={{ backgroundColor: BRAND.sand }}>
+      <section id="features" className="py-20 px-5" style={{ backgroundColor: BRAND.sand }}>
         <div ref={featuresReveal.ref} className="max-w-4xl mx-auto transition-all duration-700"
           style={{ opacity: featuresReveal.visible ? 1 : 0, transform: featuresReveal.visible ? 'none' : 'translateY(28px)' }}>
 
@@ -532,7 +591,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════════
           EMAIL WAITLIST CTA
       ══════════════════════════════════════════════ */}
-      <section className="py-20 px-5 relative overflow-hidden" style={{ backgroundColor: BRAND.slate }}>
+      <section id="join" className="py-20 px-5 relative overflow-hidden" style={{ backgroundColor: BRAND.slate }}>
         <div className="orb-dark orb-dark-gold pointer-events-none" />
         <div ref={ctaReveal.ref} className="relative max-w-lg mx-auto text-center transition-all duration-700"
           style={{ opacity: ctaReveal.visible ? 1 : 0, transform: ctaReveal.visible ? 'none' : 'translateY(28px)' }}>
