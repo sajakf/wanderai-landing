@@ -41,11 +41,6 @@ const PHOTOS = [
 const INTERVAL_MS   = 6000
 const TRANSITION_MS = 1400
 
-const AVATAR_COLORS = [
-  'hsl(35,55%,72%)', 'hsl(200,45%,68%)', 'hsl(15,50%,70%)',
-  'hsl(150,35%,65%)', 'hsl(270,30%,72%)',
-]
-
 // ─── Mock WhatsApp conversation ───────────────────────────────────────────────
 const CHAT = [
   { from: 'user', text: "Hey! I want a sunny 7-day trip, budget ~€1,500 🌞", time: '10:02' },
@@ -316,13 +311,9 @@ function StepItem({ step, idx }: { step: typeof STEPS[0]; idx: number }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Home() {
-  const [email, setEmail] = useState('')
-  const [sent, setSent] = useState(false)
   const featuresReveal = useReveal()
   const demoReveal = useReveal()
   const ctaReveal = useReveal()
-
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); if (email.trim()) setSent(true) }
 
   return (
     <div style={{ backgroundColor: BRAND.ivory }}>
@@ -589,63 +580,147 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════
-          EMAIL WAITLIST CTA
+          CTA — LAUNCHED
       ══════════════════════════════════════════════ */}
-      <section id="join" className="py-20 px-5 relative overflow-hidden" style={{ backgroundColor: BRAND.slate }}>
+      <section id="join" className="py-24 px-5 relative overflow-hidden" style={{ backgroundColor: BRAND.slate }}>
         <div className="orb-dark orb-dark-gold pointer-events-none" />
-        <div ref={ctaReveal.ref} className="relative max-w-lg mx-auto text-center transition-all duration-700"
+        <div ref={ctaReveal.ref} className="relative max-w-2xl mx-auto text-center transition-all duration-700"
           style={{ opacity: ctaReveal.visible ? 1 : 0, transform: ctaReveal.visible ? 'none' : 'translateY(28px)' }}>
 
-          <p className="text-[10px] tracking-[0.35em] uppercase mb-3" style={{ color: BRAND.teal }}>Early access</p>
-          <h2 className="font-serif text-2xl sm:text-3xl font-light text-white mb-2">
-            Be first to{' '}
-            <span className="italic font-semibold" style={{ color: BRAND.gold }}>board</span>
+          <p className="text-[9px] tracking-[0.45em] uppercase mb-5" style={{ color: BRAND.teal }}>Available now</p>
+
+          <h2 className="font-serif font-light text-white mb-4" style={{ fontSize: 'clamp(2rem, 6vw, 4rem)', lineHeight: 1.1 }}>
+            Your trip is one<br />
+            <span className="italic font-semibold" style={{ color: BRAND.gold }}>message away.</span>
           </h2>
-          <p className="text-sm font-light mb-7 max-w-xs mx-auto" style={{ color: 'rgba(247,244,239,0.55)' }}>
-            Join the waitlist for priority access when we launch.
+
+          <p className="text-sm font-light mb-10 max-w-xs mx-auto" style={{ color: 'rgba(247,244,239,0.5)' }}>
+            No app to download. No account to create.<br />Open WhatsApp and say hello.
           </p>
 
-          <div className="flex items-center justify-center gap-2.5 mb-6">
-            <div className="flex -space-x-2">
-              {AVATAR_COLORS.map((c, i) => (
-                <div key={i} className="w-7 h-7 rounded-full border-2" style={{ backgroundColor: c, borderColor: BRAND.slate, zIndex: 5 - i }} />
-              ))}
-            </div>
-            <p className="text-xs" style={{ color: 'rgba(247,244,239,0.55)' }}><span className="text-white font-medium">2,847</span> waiting</p>
-          </div>
+          <WaButton size="lg" label="Start planning on WhatsApp" />
 
-          {!sent ? (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2.5 mb-4">
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                placeholder="your@email.com" required
-                className="flex-1 px-5 py-3.5 rounded-full text-sm placeholder-stone-500 focus:outline-none transition-colors"
-                style={{ backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: BRAND.ivory }} />
-              <button type="submit" className="btn-primary px-6 py-3.5 rounded-full text-sm font-semibold whitespace-nowrap"
-                style={{ backgroundColor: BRAND.gold, color: BRAND.slate }}>
-                Join waitlist ↗
-              </button>
-            </form>
-          ) : (
-            <div className="px-6 py-3.5 rounded-full mb-4" style={{ border: '1px solid rgba(255,255,255,0.12)', backgroundColor: 'rgba(255,255,255,0.06)' }}>
-              <span className="text-sm font-light" style={{ color: BRAND.ivory }}>✦ You&apos;re on the list — first-class details incoming.</span>
-            </div>
-          )}
+          <p className="mt-5 text-[10px] font-light tracking-wide" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            Free to use &nbsp;·&nbsp; No download &nbsp;·&nbsp; No account required
+          </p>
 
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
-            <span className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.25)' }}>or</span>
-            <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
-          </div>
-          <WaButton size="md" label="Chat with us on WhatsApp" />
-
-          <p className="mt-4 text-[10px] font-light" style={{ color: 'rgba(255,255,255,0.2)' }}>No spam. Unsubscribe anytime.</p>
-
-          <div className="mt-10 pt-6 flex justify-between text-[10px]" style={{ borderTop: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.2)' }}>
-            <span className="tracking-widest uppercase">thewanderlust.app</span>
-            <span>© 2025 WanderAi</span>
-          </div>
         </div>
       </section>
+
+      {/* ══════════════════════════════════════════════
+          FOOTER
+      ══════════════════════════════════════════════ */}
+      <footer style={{ backgroundColor: '#131a1c' }} className="px-5 sm:px-12 pt-16 pb-8">
+        <div className="max-w-5xl mx-auto">
+
+          {/* Logo + tagline */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8 mb-14 pb-10"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <WMark className="w-12 h-9" color={BRAND.gold} />
+                <span className="font-serif font-light text-lg tracking-wide" style={{ color: 'rgba(255,255,255,0.9)' }}>WanderAi</span>
+              </div>
+              <p className="text-[11px] font-light italic" style={{ color: 'rgba(255,255,255,0.3)' }}>Pack light. Dream heavy.</p>
+            </div>
+            <div className="flex-shrink-0">
+              <WaButton size="sm" label="Chat on WhatsApp" />
+            </div>
+          </div>
+
+          {/* Sitemap grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-10 mb-14">
+
+            <div>
+              <p className="text-[9px] tracking-[0.3em] uppercase mb-4 font-medium" style={{ color: BRAND.teal }}>Product</p>
+              <ul className="space-y-2.5">
+                {['Features', 'How it works', 'AI Trip Planning', 'Hotel Search', 'Flight Search'].map(l => (
+                  <li key={l}><a href="#" className="text-xs font-light hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.42)' }}>{l}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-[9px] tracking-[0.3em] uppercase mb-4 font-medium" style={{ color: BRAND.teal }}>Company</p>
+              <ul className="space-y-2.5">
+                {['About us', 'Blog', 'Careers', 'Press', 'Partners'].map(l => (
+                  <li key={l}><a href="#" className="text-xs font-light hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.42)' }}>{l}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-[9px] tracking-[0.3em] uppercase mb-4 font-medium" style={{ color: BRAND.teal }}>Support</p>
+              <ul className="space-y-2.5">
+                {['FAQ', 'Contact us', 'Privacy policy', 'Terms of service', 'Cookie policy'].map(l => (
+                  <li key={l}><a href="#" className="text-xs font-light hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.42)' }}>{l}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-[9px] tracking-[0.3em] uppercase mb-4 font-medium" style={{ color: BRAND.teal }}>Connect</p>
+              <ul className="space-y-2.5">
+                <li>
+                  <a href="https://www.instagram.com/wanderai.travels" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs font-light hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.42)' }}>
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 flex-shrink-0">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                    </svg>
+                    @wanderai.travels
+                  </a>
+                </li>
+                <li>
+                  <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs font-light hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.42)' }}>
+                    <WaIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                    WhatsApp us
+                  </a>
+                </li>
+                <li>
+                  <a href="https://x.com/wanderai" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs font-light hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.42)' }}>
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 flex-shrink-0">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    @wanderai
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="flex items-center gap-2 text-xs font-light hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.42)' }}>
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 flex-shrink-0">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    LinkedIn
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Travel partner affiliates */}
+          <div className="mb-10 pb-10" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <p className="text-[9px] tracking-[0.3em] uppercase mb-5 font-medium" style={{ color: 'rgba(255,255,255,0.25)' }}>Travel partners & affiliates</p>
+            <div className="flex flex-wrap gap-3">
+              {['Booking.com', 'Hotels.com', 'Skyscanner', 'Viator', 'Amadeus', 'Expedia', 'GetYourGuide', 'Kayak'].map(p => (
+                <span key={p}
+                  className="px-3.5 py-1.5 rounded-full text-[10px] font-light tracking-wide"
+                  style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)' }}>
+                  {p}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-[10px]"
+            style={{ color: 'rgba(255,255,255,0.2)' }}>
+            <span className="tracking-widest uppercase">thewanderlust.app</span>
+            <span>© 2025 WanderAi. All rights reserved.</span>
+          </div>
+
+        </div>
+      </footer>
 
     </div>
   )
