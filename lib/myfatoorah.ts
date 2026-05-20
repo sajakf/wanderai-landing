@@ -1,16 +1,14 @@
 /**
- * MyFatoorah payment gateway — test environment.
+ * MyFatoorah payment gateway.
  *
- * Setup:
- *   1. Get your test API key from https://apitest.myfatoorah.com
- *   2. Set MYFATOORAH_API_KEY in .env.local
- *   3. Set MYFATOORAH_TEST=true for sandbox, false for production
+ * Sandbox base URL : https://apitest.myfatoorah.com  (MYFATOORAH_TEST=true)
+ * Sandbox portal   : https://demo.myfatoorah.com
+ * Public test key  : SK_KWT_vVZlnnAqu8jRByOWaRPNId4ShzEDNt256dvnjebuyzo52dXjAfRx2ixW5umjWSUx
  *
- * Without a key, the module returns placeholder data so the full
- * conversation flow still works during development.
+ * Docs: https://docs.myfatoorah.com/docs/send-payment
  */
 
-const IS_TEST = process.env.MYFATOORAH_TEST !== 'false'
+const IS_TEST  = process.env.MYFATOORAH_TEST !== 'false'
 const BASE_URL = IS_TEST
   ? 'https://apitest.myfatoorah.com'
   : 'https://api.myfatoorah.com'
