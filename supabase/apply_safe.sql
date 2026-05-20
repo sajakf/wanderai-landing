@@ -1,5 +1,6 @@
 -- ─────────────────────────────────────────────────────────────────────────────
 -- WanderAI — Safe schema apply (idempotent, run any number of times)
+-- Works whether tables already exist or are brand new.
 -- Paste the ENTIRE file into Supabase SQL Editor → Run
 -- ─────────────────────────────────────────────────────────────────────────────
 
@@ -13,10 +14,15 @@ create table if not exists wa_conversations (
   updated_at   timestamptz not null default now()
 );
 
+-- Add missing columns to existing table (safe no-op if already present)
+alter table wa_conversations add column if not exists display_name  text;
+alter table wa_conversations add column if not exists state         jsonb        not null default '{"stage":"idle","language":"en","turn_count":0}'::jsonb;
+alter table wa_conversations add column if not exists created_at    timestamptz  not null default now();
+alter table wa_conversations add column if not exists updated_at    timestamptz  not null default now();
+
 create index if not exists wa_conversations_phone_idx
   on wa_conversations (phone_number);
 
--- Auto-update updated_at
 create or replace function set_updated_at()
 returns trigger language plpgsql as $$
 begin new.updated_at = now(); return new; end; $$;
@@ -32,13 +38,18 @@ alter table wa_conversations enable row level security;
 create table if not exists wa_messages (
   id              uuid        primary key default gen_random_uuid(),
   conversation_id uuid        not null references wa_conversations (id) on delete cascade,
-  role            text        not null check (role in ('user', 'assistant', 'tool')),
+  role            text        not null,
   content         text,
   tool_calls      jsonb,
   tool_call_id    text,
   tool_name       text,
   created_at      timestamptz not null default now()
 );
+
+alter table wa_messages add column if not exists tool_calls      jsonb;
+alter table wa_messages add column if not exists tool_call_id    text;
+alter table wa_messages add column if not exists tool_name       text;
+alter table wa_messages add column if not exists created_at      timestamptz not null default now();
 
 create index if not exists wa_messages_conversation_created_idx
   on wa_messages (conversation_id, created_at asc);
@@ -50,13 +61,8 @@ create table if not exists wa_offers (
   id                 uuid        primary key default gen_random_uuid(),
   conversation_id    uuid        not null references wa_conversations (id) on delete cascade,
   phone_number       text        not null,
-  scenario           text        not null check (scenario in (
-    'search_book_pay','suggestion_24hr','budget_changes',
-    'love_at_first_sight','family_group','last_minute_solo'
-  )),
-  stage              text        not null default 'presented' check (stage in (
-    'presented','accepted','expired','cancelled','paid'
-  )),
+  scenario           text        not null,
+  stage              text        not null default 'presented',
   offer_data         jsonb       not null default '{}'::jsonb,
   total_kwd          numeric(10,3),
   total_usd          numeric(10,2),
@@ -64,15 +70,22 @@ create table if not exists wa_offers (
   payment_url        text,
   payment_invoice_id text,
   paid_at            timestamptz,
-  expires_at         timestamptz not null,
+  expires_at         timestamptz not null default now() + interval '24 hours',
   created_at         timestamptz not null default now()
 );
 
+alter table wa_offers add column if not exists offer_data          jsonb        not null default '{}'::jsonb;
+alter table wa_offers add column if not exists total_kwd           numeric(10,3);
+alter table wa_offers add column if not exists total_usd           numeric(10,2);
+alter table wa_offers add column if not exists currency            text         not null default 'KWD';
+alter table wa_offers add column if not exists payment_url         text;
+alter table wa_offers add column if not exists payment_invoice_id  text;
+alter table wa_offers add column if not exists paid_at             timestamptz;
+alter table wa_offers add column if not exists expires_at          timestamptz  not null default now() + interval '24 hours';
+alter table wa_offers add column if not exists created_at          timestamptz  not null default now();
+
 create index if not exists wa_offers_phone_stage_idx
   on wa_offers (phone_number, stage);
-
-create index if not exists wa_offers_expires_at_idx
-  on wa_offers (expires_at) where stage = 'presented';
 
 alter table wa_offers enable row level security;
 
@@ -81,19 +94,19 @@ create table if not exists wa_scenario_logs (
   id              uuid        primary key default gen_random_uuid(),
   conversation_id uuid        not null references wa_conversations (id) on delete cascade,
   phone_number    text        not null,
-  scenario        text        not null check (scenario in (
-    'search_book_pay','suggestion_24hr','budget_changes',
-    'love_at_first_sight','family_group','last_minute_solo'
-  )),
-  offer_id        uuid        references wa_offers (id) on delete set null,
-  outcome         text        check (outcome in ('completed','expired','abandoned','payment_failed')),
+  scenario        text        not null,
+  offer_id        uuid,
+  outcome         text,
   metadata        jsonb,
   created_at      timestamptz not null default now(),
   completed_at    timestamptz
 );
 
-create index if not exists wa_scenario_logs_scenario_outcome_idx
-  on wa_scenario_logs (scenario, outcome);
+alter table wa_scenario_logs add column if not exists offer_id      uuid;
+alter table wa_scenario_logs add column if not exists outcome        text;
+alter table wa_scenario_logs add column if not exists metadata       jsonb;
+alter table wa_scenario_logs add column if not exists created_at     timestamptz not null default now();
+alter table wa_scenario_logs add column if not exists completed_at   timestamptz;
 
 create index if not exists wa_scenario_logs_created_at_idx
   on wa_scenario_logs (created_at desc);
