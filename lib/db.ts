@@ -3,12 +3,26 @@
  * All conversation state, messages, offers, and scenario logs are persisted here.
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-)
+// Lazy singleton — created on first use, not at module load time
+// (prevents Vercel build failure when env vars are only available at runtime)
+let _client: SupabaseClient | null = null
+function supabaseClient(): SupabaseClient {
+  if (!_client) {
+    _client = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!,
+    )
+  }
+  return _client
+}
+// Alias kept for backwards compat with existing call sites
+const supabase = new Proxy({} as SupabaseClient, {
+  get(_t, prop) {
+    return (supabaseClient() as unknown as Record<string | symbol, unknown>)[prop]
+  },
+})
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
