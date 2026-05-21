@@ -110,12 +110,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [status, setStatus] = useState<Status>('disconnected')
 
   useEffect(() => {
-    fetch('/api/wa/status').then(r => r.json()).then(d => setStatus(d.status)).catch(() => {})
-    const es = new EventSource('/api/wa/qr')
-    es.onmessage = (e) => {
-      try { const d = JSON.parse(e.data); if (d.status) setStatus(d.status) } catch (_) {}
+    // Poll WhatsApp status every 15s — avoids SSE timeout issues on Vercel
+    let cancelled = false
+    async function pollStatus() {
+      if (cancelled) return
+      try {
+        const r = await fetch('/api/wa/status')
+        if (!cancelled && r.ok) {
+          const d = await r.json()
+          setStatus(d.status)
+        }
+      } catch (_) {}
+      if (!cancelled) setTimeout(pollStatus, 15_000)
     }
-    return () => es.close()
+    pollStatus()
+    return () => { cancelled = true }
   }, [])
 
   async function handleLogout() {
