@@ -80,29 +80,20 @@ const MODALS: Record<string, ModalData> = {
   },
 }
 
-// ─── Curated travel photos (verified Unsplash IDs) ───────────────────────────
-const BASE = 'https://images.unsplash.com'
-const P    = '?auto=format&fit=crop&w=1920&q=85'
-
+// ─── Hero photos — place files in /public/photos/ ────────────────────────────
 const PHOTOS = [
-  { url: `${BASE}/photo-1499856871958-5b9627545d1a${P}`, location: 'Isle of Skye, Scotland'     },
-  { url: `${BASE}/photo-1520769945061-0a448c463865${P}`, location: 'Lofoten Islands, Norway'  },
-  { url: `${BASE}/photo-1490806843957-31f4c9a91c65${P}`, location: 'Mount Fuji, Japan'        },
-  { url: `${BASE}/photo-1533105079780-92b9be482077${P}`, location: 'Santorini, Greece'        },
-  { url: `${BASE}/photo-1590523277543-a94d2e4eb00b${P}`, location: 'Maldives'                 },
-  { url: `${BASE}/photo-1561718541-b00339c8db2a${P}`,  location: 'Provence, France'           },
-  { url: `${BASE}/photo-1531366936337-7c912a4589a7${P}`, location: 'Northern Lights, Norway'  },
-  { url: `${BASE}/photo-1476514525535-07fb3b4ae5f1${P}`, location: 'Amalfi Coast, Italy'      },
-  { url: `${BASE}/photo-1558618666-fcd25c85cd64${P}`,  location: 'Meteora, Greece'            },
-  { url: `${BASE}/photo-1543783207-ec64e4d95325${P}`,  location: 'Alhambra, Spain'            },
-  { url: `${BASE}/photo-1526481280693-3bfa7568e0f3${P}`, location: 'Mount Fuji at Sunrise'    },
-  { url: `${BASE}/photo-1693653631563-f2ca63a1e3b0${P}`, location: 'Puglia, Italy'            },
-  { url: `${BASE}/photo-1589489873423-d1745278a8f4${P}`, location: 'Scottish Highlands'       },
-  { url: `${BASE}/photo-1539037116277-4db20889f2d4${P}`, location: 'Barcelona, Spain'         },
-  { url: `${BASE}/photo-1522383225653-ed111181a951${P}`, location: 'Kyoto, Japan'             },
+  { url: '/photos/hero-1.jpg',  location: 'Marrakech, Morocco'        },
+  { url: '/photos/hero-2.jpg',  location: 'Amanzoe, Greece'           },
+  { url: '/photos/hero-3.jpg',  location: 'Turks & Caicos'            },
+  { url: '/photos/hero-4.jpg',  location: 'Venice, Italy'             },
+  { url: '/photos/hero-5.jpg',  location: 'Greek Islands'             },
+  { url: '/photos/hero-6.jpg',  location: 'Grand Canal, Venice'       },
+  { url: '/photos/hero-7.jpg',  location: 'Amanzoe Resort, Greece'    },
+  { url: '/photos/hero-8.jpg',  location: 'Private Villa, Greece'     },
+  { url: '/photos/hero-9.jpg',  location: 'Venice Lagoon'             },
+  { url: '/photos/hero-10.jpg', location: 'Cotswolds, England'        },
   { url: `${BASE}/photo-1600582910964-5b7c109e6868${P}`, location: 'Caribbean'                },
   { url: `${BASE}/photo-1688949078626-a358f500e063${P}`, location: 'Maldives Overwater Villas'},
-  { url: `${BASE}/photo-1663428520845-056989f8a664${P}`, location: 'Norwegian Fjords'         },
 ]
 
 const INTERVAL_MS   = 6000
