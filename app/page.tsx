@@ -80,20 +80,17 @@ const MODALS: Record<string, ModalData> = {
   },
 }
 
-// ─── Hero photos — place files in /public/photos/ ────────────────────────────
+// ─── Hero photos — /public/photos/ ───────────────────────────────────────────
 const PHOTOS = [
-  { url: '/photos/hero-1.jpg',  location: 'Marrakech, Morocco'        },
-  { url: '/photos/hero-2.jpg',  location: 'Amanzoe, Greece'           },
-  { url: '/photos/hero-3.jpg',  location: 'Turks & Caicos'            },
-  { url: '/photos/hero-4.jpg',  location: 'Venice, Italy'             },
-  { url: '/photos/hero-5.jpg',  location: 'Greek Islands'             },
-  { url: '/photos/hero-6.jpg',  location: 'Grand Canal, Venice'       },
-  { url: '/photos/hero-7.jpg',  location: 'Amanzoe Resort, Greece'    },
-  { url: '/photos/hero-8.jpg',  location: 'Private Villa, Greece'     },
-  { url: '/photos/hero-9.jpg',  location: 'Venice Lagoon'             },
-  { url: '/photos/hero-10.jpg', location: 'Cotswolds, England'        },
-  { url: `${BASE}/photo-1600582910964-5b7c109e6868${P}`, location: 'Caribbean'                },
-  { url: `${BASE}/photo-1688949078626-a358f500e063${P}`, location: 'Maldives Overwater Villas'},
+  { url: '/photos/hero-1.jpg', location: 'Venice, Italy'         },
+  { url: '/photos/hero-2.jpg', location: 'Amanzoe, Greece'       },
+  { url: '/photos/hero-3.jpg', location: 'Marrakech, Morocco'    },
+  { url: '/photos/hero-4.jpg', location: 'Greek Islands'         },
+  { url: '/photos/hero-5.jpg', location: 'Turks & Caicos'        },
+  { url: '/photos/hero-6.jpg', location: 'Cotswolds, England'    },
+  { url: '/photos/hero-7.jpg', location: 'Grand Canal, Venice'   },
+  { url: '/photos/hero-8.jpg', location: 'Venice Lagoon'         },
+  { url: '/photos/hero-9.jpg', location: 'Private Villa, Greece' },
 ]
 
 const INTERVAL_MS   = 6000
