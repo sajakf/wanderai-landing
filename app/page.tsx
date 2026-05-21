@@ -568,14 +568,8 @@ export default function Home() {
               </span>
             </div>
 
-            {/* Right nav links */}
-            <div className="hidden sm:flex items-center gap-7">
-              <a href="#join" className="nav-link">Plan a trip</a>
-              <a href="#features" className="nav-link" style={{ color: 'rgba(200,163,107,0.9)' }}>Get started ↗</a>
-            </div>
-
-            {/* Mobile right — menu hint */}
-            <a href="#join" className="sm:hidden nav-link" style={{ color: 'rgba(200,163,107,0.9)' }}>Start ↗</a>
+            {/* Right — empty spacer to keep logo centered */}
+            <div className="hidden sm:block" style={{ width: '160px' }} />
           </div>
 
           {/* Thin gold rule under nav */}
