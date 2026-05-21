@@ -113,9 +113,6 @@ export default function AdminDashboard() {
             Scan QR Code — Connect WhatsApp
           </button>
 
-          <p style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.25)', textAlign: 'center', marginBottom: 16 }}>
-            Make sure <code style={{ color: BRAND.gold, fontFamily: 'monospace' }}>npm start</code> is running in <code style={{ color: BRAND.gold, fontFamily: 'monospace' }}>wanderai-bot</code>
-          </p>
 
           {/* Gold rule */}
           <div style={{ height: 1, background: `linear-gradient(to right, rgba(200,163,107,0.2), transparent)` }} />
