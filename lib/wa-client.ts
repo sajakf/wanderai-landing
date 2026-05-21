@@ -219,7 +219,10 @@ export async function connectWhatsApp() {
   wa.stopping = false
   setStatus('connecting')
 
-  const authDir = path.join(process.cwd(), 'data', 'wa-auth')
+  // Use /tmp on read-only environments (Vercel), fallback to project data dir locally
+  const authDir = process.env.VERCEL
+    ? path.join('/tmp', 'wa-auth')
+    : path.join(process.cwd(), 'data', 'wa-auth')
   fs.mkdirSync(authDir, { recursive: true })
 
   const {
