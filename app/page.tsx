@@ -278,7 +278,22 @@ function Modal({ modalKey, visible, onClose }: { modalKey: string | null; visibl
         <div style={{ height: 1, background: `linear-gradient(to right, ${data?.accent ?? BRAND.gold}44, transparent)`, marginBottom: 24 }} />
 
         {/* CTA */}
-        <WaButton size="md" label="Start planning on WhatsApp" />
+        <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            fontSize: '0.75rem', fontFamily: 'var(--font-norway)',
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+            color: BRAND.gold, textDecoration: 'none',
+            transition: 'opacity 0.2s',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.opacity = '0.7')}
+          onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+        >
+          Start planning
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" style={{ width: 14, height: 14 }}>
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
       </div>
     </div>
   )
@@ -555,16 +570,12 @@ export default function Home() {
 
             {/* Right nav links */}
             <div className="hidden sm:flex items-center gap-7">
-              <a href="#join" className="nav-link">Join waitlist</a>
-              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="nav-link"
-                style={{ color: 'rgba(200,163,107,0.9)' }}>
-                WhatsApp ↗
-              </a>
+              <a href="#join" className="nav-link">Plan a trip</a>
+              <a href="#features" className="nav-link" style={{ color: 'rgba(200,163,107,0.9)' }}>Get started ↗</a>
             </div>
 
-            {/* Mobile right — WhatsApp only */}
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
-              className="sm:hidden nav-link" style={{ color: 'rgba(200,163,107,0.9)' }}>WA ↗</a>
+            {/* Mobile right — menu hint */}
+            <a href="#join" className="sm:hidden nav-link" style={{ color: 'rgba(200,163,107,0.9)' }}>Start ↗</a>
           </div>
 
           {/* Thin gold rule under nav */}
@@ -777,8 +788,7 @@ export default function Home() {
               </div>
 
               <div className="pt-2">
-                <WaButton size="md" label="Try it now on WhatsApp" />
-                <p className="text-[10px] text-stone-400 mt-2 font-light">Free to use · No download · No account</p>
+                <p className="text-[10px] font-light" style={{ color: BRAND.teal, letterSpacing: '0.1em' }}>Free to use &nbsp;·&nbsp; No download &nbsp;·&nbsp; No account</p>
               </div>
             </div>
           </div>
@@ -801,10 +811,14 @@ export default function Home() {
           </h2>
 
           <p className="text-sm font-light mb-10 max-w-xs mx-auto" style={{ color: 'rgba(247,244,239,0.5)' }}>
-            No app to download. No account to create.<br />Open WhatsApp and say hello.
+            No app to download. No account to create.<br />Send a message and your trip begins.
           </p>
 
-          <WaButton size="lg" label="Start planning on WhatsApp" />
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+            className="btn-primary inline-flex items-center justify-center font-semibold rounded-full px-10 py-4 text-base tracking-wide transition-all"
+            style={{ backgroundColor: BRAND.gold, color: BRAND.slate, letterSpacing: '0.06em' }}>
+            Start planning
+          </a>
 
           <p className="mt-5 text-[10px] font-light tracking-wide" style={{ color: 'rgba(255,255,255,0.2)' }}>
             Free to use &nbsp;·&nbsp; No download &nbsp;·&nbsp; No account required
